@@ -1,4 +1,5 @@
-import 'package:deliver_eats/src/routes/routes.dart';
+import 'package:deliver_eats/routes/routes.dart';
+import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -8,19 +9,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: getRoutes(),
+      theme: AppTheme.theme,
       initialRoute: 'splashScreen',
+      routes: getRoutes(),
       title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Deliver Eats'),
-        ),
-        body: Center(
-          child: Container(
-            child: Text('Hello World'),
-          ),
-        ),
-      ),
     );
   }
 }

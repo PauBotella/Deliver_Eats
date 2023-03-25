@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -9,10 +11,26 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+
+  @override
+  void initState() {
+    super.initState();
+    timer();
+  }
+
+  timer(){
+    return Timer(const Duration(seconds: 3),route);
+  }
+
+  route() {
+    Navigator.pushReplacementNamed(context, 'login');
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      backgroundColor: Color(0xff1C2833),
+      //backgroundColor: Color(0xff1C2833),
       body: splashContent(),
     );
   }
