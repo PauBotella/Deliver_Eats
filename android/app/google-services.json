@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "727483474692",
+    "project_id": "deliver-eats-889b3",
+    "storage_bucket": "deliver-eats-889b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727483474692:android:139516ae83ffb257cee651",
+        "android_client_info": {
+          "package_name": "com.example.deliver_eats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727483474692-40tm16vgbhpgqd7porspk3ocacabr5eq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiDJ7ZuM2G1ZJnZX7qPRKVk3jTaHhzckA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727483474692-40tm16vgbhpgqd7porspk3ocacabr5eq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,6 @@
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-
+import '../services/auth_service.dart';
 import '../widgets/widgets.dart';
 
 class LoginPage extends StatelessWidget {
@@ -39,7 +39,12 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        final result = await AuthService().singInWithGoogle();
+
+                        Navigator.pushReplacementNamed(context, 'home');
+
+                        },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.inputBackground,
                         shape: RoundedRectangleBorder(
@@ -62,7 +67,7 @@ class LoginPage extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 70, top: 30),
                       child: Row(
                         children: [
-                          Text(
+                          const Text(
                             '¿No estás registrado?',
                             style: TextStyle(color: AppTheme.inputBackground),
                           ),
@@ -73,8 +78,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Iniciar Sesión'),
+                      onPressed: () {Navigator.pushReplacementNamed(context, 'home');},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.indigo,
                         shape: RoundedRectangleBorder(
@@ -82,6 +86,7 @@ class LoginPage extends StatelessWidget {
                         elevation: 3,
                         minimumSize: Size(340, 50),
                       ),
+                      child: const Text('Iniciar Sesión'),
                     ),
                   ],
                 ),

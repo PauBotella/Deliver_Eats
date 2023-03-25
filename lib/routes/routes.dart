@@ -7,6 +7,7 @@ import '../pages/splashScreen_page.dart';
 Map<String,WidgetBuilder> getRoutes() {
 
     return <String,WidgetBuilder> {
+      'home': (BuildContext context) => HomePage(),
       'login': (BuildContext context) => LoginPage(),
       'splashScreen': (BuildContext context) => Splash(),
     };
