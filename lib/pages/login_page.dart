@@ -1,13 +1,43 @@
+import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
+import '../services/auth_service_google.dart';
 import '../widgets/widgets.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+   LoginPage({super.key});
+
+  final User? user = FbAuth().currentUser;
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+class _LoginPageState extends State<LoginPage> {
+  String errorMessage = '';
+  bool isLogin = false;
+
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+  
+  Future signInWithEmailAndPassword() async {
+    try {
+      await FbAuth().signInWithEmailAndPassword(
+          email: _controllerEmail.text,
+          password: _controllerPassword.text
+      );
+      isLogin = true;
+    } on FirebaseAuthException catch(ex) {
+      setState(() {
+        errorMessage = ex.message!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        /*
+      /*
       Gesture detector, lo uso para cuando tienes el focus del teclado en el TextFormField
       Cuando apriete a cualquier sitio de la pantalla que no sea el TextFormField el focus se quitará
       */
@@ -28,11 +58,13 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 30),
                     CustomInput(
+                      controller: _controllerEmail,
                       isPasswordInput: false,
                       inputTxt: 'Email',
                       icon: Icons.email,
                     ),
                     CustomInput(
+                      controller: _controllerPassword,
                       isPasswordInput: true,
                       inputTxt: 'Password',
                       icon: Icons.password,
@@ -44,7 +76,7 @@ class LoginPage extends StatelessWidget {
 
                         Navigator.pushReplacementNamed(context, 'home');
 
-                        },
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.inputBackground,
                         shape: RoundedRectangleBorder(
@@ -78,7 +110,19 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {Navigator.pushReplacementNamed(context, 'home');},
+                      onPressed: () {
+                        signInWithEmailAndPassword();
+                        if (isLogin) {
+                          Navigator.pushReplacementNamed(context, 'home');
+                        } else {
+                          showDialog(context: context, builder: (context) {
+                            return AlertDialog(
+                              title: Text('Email o contraseña incorrecta'),
+                            );
+                          });
+                        }
+
+                        },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.indigo,
                         shape: RoundedRectangleBorder(
@@ -93,7 +137,8 @@ class LoginPage extends StatelessWidget {
               ),
             ),
           ),
-      )
+        )
     );
   }
+
 }
