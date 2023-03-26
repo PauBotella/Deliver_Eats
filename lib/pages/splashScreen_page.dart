@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+
+import '../services/auth_service.dart';
+import '../utils/preferences.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -15,7 +19,9 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+
     timer();
+
   }
 
   timer(){
@@ -23,7 +29,21 @@ class _SplashState extends State<Splash> {
   }
 
   route() {
-    Navigator.pushReplacementNamed(context, 'login');
+    if (MyPreferences.email != '') {
+      Future signInWithEmailAndPassword() async {
+        try {
+          await FbAuth().signInWithEmailAndPassword(
+              email: MyPreferences.email,
+              password: MyPreferences.password
+          );
+        } on FirebaseAuthException catch(ex) {}
+      }
+      signInWithEmailAndPassword();
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      Navigator.pushReplacementNamed(context, 'login');
+    }
+
   }
 
   @override

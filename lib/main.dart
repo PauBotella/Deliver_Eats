@@ -1,5 +1,6 @@
 import 'package:deliver_eats/routes/routes.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:deliver_eats/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -9,6 +10,7 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await MyPreferences.init();
   runApp(MyApp());
 }
 

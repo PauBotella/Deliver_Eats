@@ -3,12 +3,14 @@ import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service_google.dart';
+import '../utils/preferences.dart';
+import '../utils/preferences.dart';
 import '../widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
    LoginPage({super.key});
 
-  final User? user = FbAuth().currentUser;
+
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+
   
   Future signInWithEmailAndPassword() async {
     try {
@@ -36,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       /*
       Gesture detector, lo uso para cuando tienes el focus del teclado en el TextFormField
@@ -113,6 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         signInWithEmailAndPassword();
                         if (isLogin) {
+                          MyPreferences.email = _controllerEmail.text;
+                          MyPreferences.email = _controllerPassword.text;
                           Navigator.pushReplacementNamed(context, 'home');
                         } else {
                           showDialog(context: context, builder: (context) {
