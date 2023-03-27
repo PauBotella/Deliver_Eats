@@ -3,19 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  User get currentUser => FbAuth().currentUser!;
+   HomePage({Key? key}) : super(key: key);
 
+  final user = FbAuth().getUser();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text((currentUser.email)!),
-        ),
-        body: Center(
-          child: Container(
-            child: Text('Home'),
-          ),
-        ),
-      );
+      body: Center(child: Text(user!.email!)),
+    );
   }
 }
+
+

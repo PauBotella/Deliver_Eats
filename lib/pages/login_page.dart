@@ -8,143 +8,242 @@ import '../utils/preferences.dart';
 import '../widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
-   LoginPage({super.key});
-
-
+  LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+
 class _LoginPageState extends State<LoginPage> {
-  String errorMessage = '';
-  bool isLogin = false;
+  String _errorMessage = '';
+  bool _isLogin = false;
+  bool _isRegisterPage = false;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerConfirmPassword =
+      TextEditingController();
 
-  
   Future signInWithEmailAndPassword() async {
     try {
       await FbAuth().signInWithEmailAndPassword(
-          email: _controllerEmail.text,
-          password: _controllerPassword.text
-      );
-      isLogin = true;
-    } on FirebaseAuthException catch(ex) {
+          email: _controllerEmail.text, password: _controllerPassword.text);
+      _isLogin = true;
+    } on FirebaseAuthException catch (ex) {
       setState(() {
-        errorMessage = ex.message!;
+        _errorMessage = ex.message!;
+      });
+    }
+  }
+
+  Future signInWithEmailAndPassword2(String email, String password) async {
+    try {
+      await FbAuth()
+          .signInWithEmailAndPassword(email: email, password: password);
+      _isLogin = true;
+    } on FirebaseAuthException catch (ex) {
+      setState(() {
+        _errorMessage = ex.message!;
+      });
+    }
+  }
+
+  Future createUserWithEmailAndPassword(String email, String password) async {
+    try {
+      await FbAuth().createUserWithEmailAndPassword(
+          email: email, password: password);
+
+    } on FirebaseAuthException catch (ex) {
+      _dialog(ex.message!);
+      _isLogin = true;
+      setState(() {
+        _isLogin = false;
+        _errorMessage = ex.message!;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      /*
+        /*
       Gesture detector, lo uso para cuando tienes el focus del teclado en el TextFormField
       Cuando apriete a cualquier sitio de la pantalla que no sea el TextFormField el focus se quitará
       */
         body: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    SizedBox(height: 40),
-                    const Icon(
-                      Icons.lock,
-                      size: 100,
-                    ),
-                    const SizedBox(height: 30),
-                    CustomInput(
-                      controller: _controllerEmail,
-                      isPasswordInput: false,
-                      inputTxt: 'Email',
-                      icon: Icons.email,
-                    ),
-                    CustomInput(
-                      controller: _controllerPassword,
-                      isPasswordInput: true,
-                      inputTxt: 'Password',
-                      icon: Icons.password,
-                    ),
-                    const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed: () async{
-                        final result = await AuthService().singInWithGoogle();
-
-                        Navigator.pushReplacementNamed(context, 'home');
-
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.inputBackground,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        elevation: 3,
-                        minimumSize: Size(100, 90),
-                      ),
-                      child: Container(
-                        child: const FadeInImage(
-                          placeholder: AssetImage('assets/loading-gif.gif'),
-                          image: AssetImage(
-                            'assets/google-logo.png',
-                          ),
-                          width: 60,
-                          height: 60,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 70, top: 30),
-                      child: Row(
-                        children: [
-                          const Text(
-                            '¿No estás registrado?',
-                            style: TextStyle(color: AppTheme.inputBackground),
-                          ),
-                          TextButton(
-                              onPressed: () {}, child: Text('Registrate aquí'))
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        signInWithEmailAndPassword();
-                        if (isLogin) {
-                          MyPreferences.email = _controllerEmail.text;
-                          MyPreferences.email = _controllerPassword.text;
-                          Navigator.pushReplacementNamed(context, 'home');
-                        } else {
-                          showDialog(context: context, builder: (context) {
-                            return AlertDialog(
-                              title: Text('Email o contraseña incorrecta'),
-                            );
-                          });
-                        }
-
-                        },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigo,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        elevation: 3,
-                        minimumSize: Size(340, 50),
-                      ),
-                      child: const Text('Iniciar Sesión'),
-                    ),
-                  ],
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(height: 40),
+                const Icon(
+                  Icons.lock,
+                  size: 100,
                 ),
-              ),
+                const SizedBox(height: 30),
+                CustomInput(
+                  controller: _controllerEmail,
+                  isPasswordInput: false,
+                  inputTxt: 'Email',
+                  icon: Icons.email,
+                ),
+                CustomInput(
+                  controller: _controllerPassword,
+                  isPasswordInput: true,
+                  inputTxt: 'Password',
+                  icon: Icons.password,
+                ),
+                Visibility(
+                    visible: !_isRegisterPage, child: SizedBox(height: 30)),
+                Visibility(
+                  visible: _isRegisterPage,
+                  child: CustomInput(
+                    controller: _controllerConfirmPassword,
+                    isPasswordInput: true,
+                    inputTxt: 'Confirm Password',
+                    icon: Icons.password,
+                  ),
+                ),
+                Visibility(
+                  visible: !_isRegisterPage,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final result = await AuthService().singInWithGoogle();
+
+                      Navigator.pushReplacementNamed(context, 'home');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.inputBackground,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      elevation: 3,
+                      minimumSize: Size(100, 90),
+                    ),
+                    child: Container(
+                      child: const FadeInImage(
+                        placeholder: AssetImage('assets/loading-gif.gif'),
+                        image: AssetImage(
+                          'assets/google-logo.png',
+                        ),
+                        width: 60,
+                        height: 60,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 70, top: 30),
+                  child: Row(
+                    children: [
+                      !_isRegisterPage
+                          ? const Text(
+                              '¿No estás registrado?',
+                              style: TextStyle(color: AppTheme.inputBackground),
+                            )
+                          : const Text(
+                              'O prueba a hacer login',
+                              style: TextStyle(color: AppTheme.inputBackground),
+                            ),
+                      !_isRegisterPage
+                          ? TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isRegisterPage = true;
+                                });
+                              },
+                              child: Text('Registrate aquí'))
+                          : TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isRegisterPage = false;
+                                });
+                              },
+                              child: Text('Hacer Login Aquí'))
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    !_isRegisterPage
+                        ? _singInEmail(context)
+                        : _register(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    elevation: 3,
+                    minimumSize: Size(340, 50),
+                  ),
+                  child: !_isRegisterPage
+                      ? const Text('Iniciar Sesión')
+                      : Text('Registrarse'),
+                ),
+              ],
             ),
           ),
-        )
-    );
+        ),
+      ),
+    ));
   }
 
+  void _singInEmail(BuildContext context) {
+    signInWithEmailAndPassword();
+    FbAuth().firebaseAuth.authStateChanges().listen((user) {
+
+      if(user != null) {
+        MyPreferences.email = _controllerEmail.text;
+        MyPreferences.password = _controllerPassword.text;
+        Navigator.pushReplacementNamed(context, 'home');
+      }
+    });
+  }
+
+  void _singInEmail2(BuildContext context,String email, String password) {
+    signInWithEmailAndPassword2(email,password);
+    FbAuth().firebaseAuth.authStateChanges().listen((user) {
+
+      if(user != null) {
+        MyPreferences.email = email;
+        MyPreferences.password = password;
+        Navigator.pushReplacementNamed(context, 'home');
+      }
+    });
+
+  }
+
+  void _register(BuildContext context) {
+    String email = _controllerEmail.text;
+    String password = _controllerPassword.text;
+    String confirmPassword = _controllerConfirmPassword.text;
+
+    try {
+      if (confirmPassword != password) {
+        throw const FormatException('Las contraseñas no coinciden');
+      } else if(password.length < 6) {
+        throw const FormatException('La contraseña ha de tener como mínimo 6 caracteres');
+      }
+      createUserWithEmailAndPassword(email,password);
+      _singInEmail2(context,email,password);
+
+    } on FormatException catch (ex) {
+      _dialog(ex.message);
+    }
+  }
+
+  void _dialog(String msg) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(msg),
+          );
+        });
+  }
 }
