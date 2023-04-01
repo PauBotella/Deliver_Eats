@@ -13,9 +13,8 @@ class RestaurantPage extends StatelessWidget {
         title: const Text('Restaurantes'),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search))
+          //IconButton(onPressed: () {}, icon: Icon(Icons.search))
         ],
-        backgroundColor: AppTheme.widgetColor,
       ),
       body: SingleChildScrollView(
             child: Column(

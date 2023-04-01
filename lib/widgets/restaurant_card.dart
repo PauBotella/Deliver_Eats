@@ -39,6 +39,7 @@ class _RestaurantCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, 'products',arguments: 'restaurant-info'),
       child: Container(
@@ -47,9 +48,9 @@ class _RestaurantCardBody extends StatelessWidget {
             padding: EdgeInsets.all(20),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: FadeInImage(
-                height: 200,
-                width: 350,
+              child:  FadeInImage(
+                height: size.height *0.3,
+                width: size.height *0.8,
                 placeholder: AssetImage('assets/no-image.jpg'),
                 image: NetworkImage('https://via.placeholder.com/200x300'),
                 fit: BoxFit.cover,

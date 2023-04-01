@@ -1,3 +1,5 @@
+import 'package:deliver_eats/widgets/product_card_swipper.dart';
+import 'package:deliver_eats/widgets/rated_products.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatelessWidget {
@@ -6,9 +8,20 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Center'),
+      appBar: AppBar(
+        title: Text('Productos'),
+        centerTitle: true,
       ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: const [
+              ProductSwipper(),
+              RatedProducts(),
+            ],
+          ),
+        ),
+      )
     );
   }
 }

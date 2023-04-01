@@ -8,7 +8,7 @@ class AppTheme {
 
   static ThemeData theme = ThemeData.light().copyWith(
     primaryColor: primary,
-    appBarTheme: AppBarTheme(color: primary, elevation: 0),
+    appBarTheme: AppBarTheme(color: widgetColor, elevation: 0),
     scaffoldBackgroundColor: primary,
 
     //Input theme
