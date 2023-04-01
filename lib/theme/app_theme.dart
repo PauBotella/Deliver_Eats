@@ -16,10 +16,10 @@ class AppTheme {
       floatingLabelBehavior: FloatingLabelBehavior.never,
       fillColor: inputBackground,
       filled: true,
-      prefixStyle: TextStyle(
+      prefixStyle: const TextStyle(
         color: Colors.red,
       ),
-      labelStyle: TextStyle(
+      labelStyle: const TextStyle(
         color: Colors.indigo,
         fontWeight: FontWeight.bold,
       ),

@@ -1,17 +1,35 @@
-import 'package:deliver_eats/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:deliver_eats/pages/restaurant_page.dart';
+import 'package:deliver_eats/routes/routes.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-   HomePage({Key? key}) : super(key: key);
+import '../widgets/bottom_nav.dart';
 
-  final user = FbAuth().getUser();
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int index = 0;
+  BottomNav? bNav;
+
+  @override
+  void initState() {
+    super.initState();
+    bNav = BottomNav(getIndex: (currentIndex) {
+      setState(() {
+        index = currentIndex;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text(user!.email!)),
+      bottomNavigationBar: bNav,
+      body: getPageByID(index),
     );
   }
 }
-
-

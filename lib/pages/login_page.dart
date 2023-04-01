@@ -4,8 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service_google.dart';
 import '../utils/preferences.dart';
-import '../utils/preferences.dart';
-import '../widgets/widgets.dart';
+import '../widgets/custom_input.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -15,8 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String _errorMessage = '';
-  bool _isLogin = false;
   bool _isRegisterPage = false;
 
   final TextEditingController _controllerEmail = TextEditingController();
@@ -28,11 +25,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await FbAuth().signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
-      _isLogin = true;
     } on FirebaseAuthException catch (ex) {
-      setState(() {
-        _errorMessage = ex.message!;
-      });
+      _dialog(ex.message!);
+      setState(() {});
     }
   }
 
@@ -40,26 +35,21 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await FbAuth()
           .signInWithEmailAndPassword(email: email, password: password);
-      _isLogin = true;
     } on FirebaseAuthException catch (ex) {
-      setState(() {
-        _errorMessage = ex.message!;
-      });
+      //Cambiar mensaje de la excepción
+      _dialog(ex.message!);
+      setState(() {});
     }
   }
 
   Future createUserWithEmailAndPassword(String email, String password) async {
     try {
-      await FbAuth().createUserWithEmailAndPassword(
-          email: email, password: password);
-
+      await FbAuth()
+          .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
+      //Cambiar mensaje de la excepción
       _dialog(ex.message!);
-      _isLogin = true;
-      setState(() {
-        _isLogin = false;
-        _errorMessage = ex.message!;
-      });
+      setState(() {});
     }
   }
 
@@ -196,8 +186,7 @@ class _LoginPageState extends State<LoginPage> {
   void _singInEmail(BuildContext context) {
     signInWithEmailAndPassword();
     FbAuth().firebaseAuth.authStateChanges().listen((user) {
-
-      if(user != null) {
+      if (user != null) {
         MyPreferences.email = _controllerEmail.text;
         MyPreferences.password = _controllerPassword.text;
         Navigator.pushReplacementNamed(context, 'home');
@@ -205,17 +194,15 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _singInEmail2(BuildContext context,String email, String password) {
-    signInWithEmailAndPassword2(email,password);
+  void _singInEmail2(BuildContext context, String email, String password) {
+    signInWithEmailAndPassword2(email, password);
     FbAuth().firebaseAuth.authStateChanges().listen((user) {
-
-      if(user != null) {
+      if (user != null) {
         MyPreferences.email = email;
         MyPreferences.password = password;
         Navigator.pushReplacementNamed(context, 'home');
       }
     });
-
   }
 
   void _register(BuildContext context) {
@@ -226,12 +213,13 @@ class _LoginPageState extends State<LoginPage> {
     try {
       if (confirmPassword != password) {
         throw const FormatException('Las contraseñas no coinciden');
-      } else if(password.length < 6) {
-        throw const FormatException('La contraseña ha de tener como mínimo 6 caracteres');
+      } else if (password.length < 6) {
+        throw const FormatException(
+            'La contraseña ha de tener como mínimo 6 caracteres');
       }
-      createUserWithEmailAndPassword(email,password);
-      _singInEmail2(context,email,password);
-
+      createUserWithEmailAndPassword(email, password);
+      _singInEmail2(context, email, password);
+//Cambiar mensaje de la excepción
     } on FormatException catch (ex) {
       _dialog(ex.message);
     }

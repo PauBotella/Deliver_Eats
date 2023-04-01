@@ -3,6 +3,7 @@ import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 
 void main() async{
