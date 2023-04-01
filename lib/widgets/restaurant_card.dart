@@ -57,10 +57,25 @@ class _RestaurantCardBody extends StatelessWidget {
               ),
             ),
           ),
-          Text('Restaurante'),
-          Text('Restaurante'),
-          Text('Restaurante'),
-          Text('Restaurante'),
+          Text('Nombre restaurante'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.star,
+                size: 20,
+                color: Colors.yellow,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                'Rating',
+              )
+            ],
+          ),
+          Text('Pedido Mínimo'),
+          const SizedBox(height: 10,)
         ]),
       ),
     );
