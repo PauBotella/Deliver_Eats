@@ -2,6 +2,8 @@ import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 import '../services/auth_service_google.dart';
 import '../utils/preferences.dart';
 import '../widgets/custom_input.dart';
@@ -103,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                   visible: !_isRegisterPage,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final result = await AuthService().singInWithGoogle();
+                      var result = await AuthService().singInWithGoogle();
 
                       Navigator.pushReplacementNamed(context, 'home');
                     },
@@ -200,6 +202,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         MyPreferences.email = email;
         MyPreferences.password = password;
+        UserProvider.addUser(UserF(email: user.email!, username: user.email!.split('@')[0], role: "cliente"));
         Navigator.pushReplacementNamed(context, 'home');
       }
     });

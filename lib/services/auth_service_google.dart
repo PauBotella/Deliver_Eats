@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../models/user.dart';
+import '../providers/user_provider.dart';
+
 class AuthService {
   singInWithGoogle() async {
     //Sale la ventana para elegir el correo
@@ -13,6 +16,7 @@ class AuthService {
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
     );
+    UserProvider.addUser(UserF(email: gUser.email, username: gUser.email.split('@')[0], role: "cliente"));
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

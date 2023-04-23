@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:deliver_eats/models/food_type.dart';
 import 'package:deliver_eats/models/product.dart';
-import 'package:deliver_eats/providers/product_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class Restaurant {
   String address;
   String name;
   double minimumOrder;
   double rating;
-  Future<FoodType> type;
+  String type;
   String image;
   Future<List<Product>> products;
 
@@ -31,20 +28,13 @@ class Restaurant {
         image: json['image'],
         minimumOrder: json['minimum_order'].toDouble(),
         name: json['name'],
-        type: getType(json),
+        type: json['type'],
         rating: json['rating'].toDouble(),
         products: getProducts(json)
     );
   }
 
-   static Future<FoodType> getType(json) async {
-    final DocumentReference<Map<String, dynamic>> typeref = json['type'];
-    DocumentSnapshot<Map<String, dynamic>> typeSnapshot = await typeref.get();
-    final Map<String,dynamic> typeData = typeSnapshot.data()!;
-    return FoodType.fromJson(typeData);
-  }
-
-  static Future<List<Product>> getProducts(json) async {
+  static Future<List<Product>> getProducts(Map<String, dynamic> json) async {
     List<Product> paco = [];
     final List<dynamic> producJson = json['products'];
     final List<DocumentReference<Map<String, dynamic>>> productRef = producJson.map((docRef) => FirebaseFirestore.instance.doc(docRef.path)).toList();

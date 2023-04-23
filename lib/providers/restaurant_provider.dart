@@ -6,5 +6,4 @@ class RestaurantProvider {
     Stream<QuerySnapshot<Map<String,dynamic>>> stream = _collectionRef.snapshots() as Stream<QuerySnapshot<Map<String,dynamic>>>;
     return stream;
   }
-
 }

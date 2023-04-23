@@ -1,4 +1,3 @@
-import 'package:deliver_eats/models/food_type.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -88,18 +87,8 @@ class _RestaurantCardBody extends StatelessWidget {
             ],
           ),
           
-          FutureBuilder(
-            future: restaurant.type,
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
-              if(snapshot.hasData) {
-                return Text(snapshot.data!.type);
-              } else {
-                return Text('');
-              }
-            },
-            
-          ),
-          
+          Text(restaurant.type),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
