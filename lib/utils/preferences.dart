@@ -16,15 +16,12 @@ class MyPreferences {
   static String get password {
     return _prefs.getString('password') ?? _password;
   }
-
   static set email (String email) {
     _email = email;
     _prefs.setString('email', email);
   }
-
   static set password (String password) {
     _password = password;
     _prefs.setString('password', password);
   }
-
 }

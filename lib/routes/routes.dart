@@ -22,7 +22,7 @@ Map<String,WidgetBuilder> getRoutes() {
 Widget getPageByID(int index) {
 
   Map<int ,Widget> routes = {
-    0: const RestaurantPage(),
+    0: RestaurantPage(),
     1: const UserPage(),
     2: const CartPage(),
   };
