@@ -12,12 +12,11 @@ class ProductSwipper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<List<Product>> list = restaurant.products;
-    print("MERDOLO" + list.toString());
     return FutureBuilder(
       future: list,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if(snapshot.hasData) {
-          print('SI K HAY ${snapshot.data}');
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
         return cardContent(context, snapshot.data);
       },
@@ -38,7 +37,7 @@ cardContent(BuildContext context, List<Product> list) {
         itemBuilder: (_, int index) {
           return GestureDetector(
             onTap: () => Navigator.pushNamed(context, 'details',
-                arguments: 'product-info'),
+                arguments: list[index]),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(

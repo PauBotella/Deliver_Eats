@@ -1,18 +1,21 @@
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
+import '../models/product.dart';
+
 class ProductDetail extends StatelessWidget {
   const ProductDetail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Product product = ModalRoute.of(context)!.settings.arguments! as Product;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: const _CustomAppBar(),
+              sliver: _CustomAppBar(product: product,),
             )
           ];
         },
@@ -24,14 +27,14 @@ class ProductDetail extends StatelessWidget {
                 const SizedBox(
                   height: 60,
                 ),
-                const _CardAndTitle(),
+                    _CardAndTitle(product: product),
                 const SizedBox(
                   height: 50,
                 ),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.all(20),
                   child: Text(
-                    'Descripción -> Bua este es un producto mu rico pork esta to guapo noseque no se que poner lol equisde bendover',
+                    product.description,
                     textAlign: TextAlign.justify,
                   ),
                 ),
@@ -71,11 +74,12 @@ class ProductDetail extends StatelessWidget {
 }
 
 class _CustomAppBar extends StatelessWidget {
-  const _CustomAppBar({Key? key}) : super(key: key);
+  final Product product;
+  const _CustomAppBar({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const SliverAppBar(
+    return SliverAppBar(
       backgroundColor: AppTheme.widgetColor,
       expandedHeight: 190,
       floating: true,
@@ -83,10 +87,10 @@ class _CustomAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text('Nombre Producto'),
+        title: Text(product.name,style: TextStyle(color: Colors.white),),
         background: FadeInImage(
           placeholder: AssetImage('assets/loading.gif'),
-          image: NetworkImage('https://via.placeholder.com/500x300'),
+          image: NetworkImage(product.image),
           fit: BoxFit.cover,
         ),
       ),
@@ -95,7 +99,8 @@ class _CustomAppBar extends StatelessWidget {
 }
 
 class _CardAndTitle extends StatelessWidget {
-  const _CardAndTitle({Key? key}) : super(key: key);
+  final Product product;
+  const _CardAndTitle({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,65 +112,61 @@ class _CardAndTitle extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: const FadeInImage(
+            child: FadeInImage(
               height: 150,
+              width: 155,
               placeholder: const AssetImage('assets/no-image.jpg'),
-              image: NetworkImage('https://via.placeholder.com/300x400'),
+              image: NetworkImage(product.image),
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(
-            width: 50,
-          ),
-          Column(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              Text(
-                'Nombre producto',
-                style: textTheme.headline6,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Precio producto',
-                style: textTheme.subtitle1,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Tipo de comida, ej china',
-                style: textTheme.subtitle1,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'Rating',
-                    style: textTheme.caption,
-                  )
-                ],
-              )
-            ],
+
+          Padding(
+            padding: EdgeInsets.only(left: 50),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                Text(
+                  'Pato Pekin', // 16 CARACTERES SI NO EXPLOTA LO DEJARÉ EN 15
+                  style: textTheme.headline6,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Precio "+product.price.toString(),
+                  style: textTheme.subtitle1,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.star,
+                      size: 20,
+                      color: Colors.yellow,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      product.rating.toString(),
+                      style: textTheme.caption,
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ],
       ),

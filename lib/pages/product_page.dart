@@ -21,7 +21,7 @@ class ProductPage extends StatelessWidget {
                 child: Column(
                   children: [
                     ProductSwipper(restaurant: restaurant),
-                    RatedProducts(),
+                    RatedProducts(restaurant: restaurant),
                   ],
                 ),
               ),

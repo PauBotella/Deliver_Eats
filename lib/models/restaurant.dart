@@ -46,10 +46,8 @@ class Restaurant {
 
   static Future<List<Product>> getProducts(json) async {
     List<Product> paco = [];
-    print(json['products']);
     final List<dynamic> producJson = json['products'];
     final List<DocumentReference<Map<String, dynamic>>> productRef = producJson.map((docRef) => FirebaseFirestore.instance.doc(docRef.path)).toList();
-    print("LISTA REERENCIAS" + productRef[0].toString());
     for(DocumentReference<Map<String, dynamic>> docRef in productRef) {
       DocumentSnapshot<Map<String, dynamic>> productSnapshot = await docRef.get();
       final Map<String, dynamic> productData = productSnapshot.data()!;
