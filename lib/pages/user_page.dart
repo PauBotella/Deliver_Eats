@@ -3,6 +3,7 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:deliver_eats/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +15,15 @@ class UserPage extends StatelessWidget {
     User currentUser = FbAuth().getUser()!;
 
     Map<String, Function()> clientOptions = {
-      'Cerrar Sesión': () => print('cerrar'),
-      'Borrar Cuenta': () => print('borrar'),
+      'Cerrar Sesión': () => {
+    FbAuth().firebaseAuth.signOut(),
+
+    FbAuth().firebaseAuth.authStateChanges().listen((user) {
+      MyPreferences.email = '';
+      MyPreferences.password = '';
+      Navigator.pushReplacementNamed(context, 'login');
+    })
+      },
       'Modificar Datos': () => print('modificar')
     };
     Map<String, Function()> encargadoOptions = {
@@ -34,7 +42,6 @@ class UserPage extends StatelessWidget {
         .then((QuerySnapshot snapshot) {
       if (snapshot.docs.isNotEmpty) {
         for (var element in snapshot.docs) {
-          print(UserF.fromJson(element.data() as Map<String, dynamic>).email);
           return UserF.fromJson(element.data() as Map<String, dynamic>);
         }
       }
@@ -55,8 +62,7 @@ class UserPage extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
       child: Center(
-        child: SingleChildScrollView(
-          child: FutureBuilder(
+        child: FutureBuilder(
             future: user,
             builder: (BuildContext context, AsyncSnapshot<UserF> snapshot) {
               if (snapshot.hasData) {
@@ -83,16 +89,16 @@ class UserPage extends StatelessWidget {
                       ),
                       Text(user.email),
                       const SizedBox(
-                        height: 30,
+                        height: 50,
                       ),
                       Container(
-                        color: Colors.red,
                         width: size.width - 50,
                         height: size.height - 400,
                         child: ListView.builder(
                           itemCount: keys.length,
                           itemBuilder: (BuildContext context, int index) {
                             return ListTile(
+                              trailing: Icon(Icons.keyboard_arrow_right),
                               title: Text(keys[index]),
                               onTap: values[index],
 
@@ -109,6 +115,6 @@ class UserPage extends StatelessWidget {
           ),
         ),
       ),
-    ));
+    );
   }
 }
