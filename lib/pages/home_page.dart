@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           bool isGoogleUser = snapshot.data.contains(GoogleAuthProvider.PROVIDER_ID);
+
           if (!MyPreferences.isUserCreated && isGoogleUser) {
             UserProvider.usersRef
                 .where('email', isEqualTo: user.email)

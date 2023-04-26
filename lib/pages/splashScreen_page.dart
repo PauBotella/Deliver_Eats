@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import '../services/auth_service.dart';
-import '../services/auth_service_google.dart';
 import '../utils/preferences.dart';
 
 class Splash extends StatefulWidget {
@@ -39,7 +38,6 @@ class _SplashState extends State<Splash> {
           );
         } on FirebaseAuthException catch(ex) {}
       }
-      print('Hay usuario');
       signInWithEmailAndPassword();
       Navigator.pushReplacementNamed(context, 'home');
 

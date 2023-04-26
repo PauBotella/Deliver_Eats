@@ -16,7 +16,6 @@ class AuthService {
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
     );
-    UserProvider.addUser(UserF(email: gUser.email, username: gUser.email.split('@')[0], role: "cliente"));
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

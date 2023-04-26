@@ -15,10 +15,11 @@ class ProductSwipper extends StatelessWidget {
     return FutureBuilder(
       future: list,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+        if(snapshot.hasData) {
+          return cardContent(context, snapshot.data);
         }
-        return cardContent(context, snapshot.data);
+
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

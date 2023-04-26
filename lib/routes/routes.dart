@@ -23,8 +23,8 @@ Widget getPageByID(int index) {
 
   Map<int ,Widget> routes = {
     0: RestaurantPage(),
-    1: const UserPage(),
-    2: const CartPage(),
+    1: UserPage(),
+    2: CartPage(),
   };
 
   return routes[index]!;
