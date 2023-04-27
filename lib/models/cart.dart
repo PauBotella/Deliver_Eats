@@ -45,13 +45,13 @@ class Cart {
     return product;
   }
 
-  static Future<Map<String, dynamic>> toMap(Cart cart) async{
-    Product product =await cart.product;
-    UserF user = await cart.user;
+  Future<Map<String, dynamic>> toMap() async{
+    Product p =await product;
+    UserF u = await user;
     return {
-      'cantidad': cart.cantidad,
-      'product_ID': ProductProvider.productsRef.doc(product.uid),
-      'user_ID': UserProvider.usersRef.doc(user.uid)
+      'cantidad': cantidad,
+      'product_ID': ProductProvider.productsRef.doc(p.uid),
+      'user_ID': UserProvider.usersRef.doc(u.uid)
     };
   }
 }

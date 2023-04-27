@@ -22,4 +22,17 @@ class UserProvider {
     });
     return userF;
   }
+
+  static updateUser(UserF user) async{
+
+    try {
+      Map<String,dynamic> userMap = user.toMap();
+      await usersRef.doc(user.uid).update(userMap);
+      print('Usuario actualizado');
+    } catch (e) {
+      print('Usuario actualizando carrito$e');
+    }
+
+  }
+
 }

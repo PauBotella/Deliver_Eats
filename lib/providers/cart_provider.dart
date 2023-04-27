@@ -28,7 +28,7 @@ class CartProvider {
 
   updateCart(Cart cart) async{
 
-    Map<String,dynamic> cartMap = await Cart.toMap(cart);
+    Map<String,dynamic> cartMap = await cart.toMap();
 
     try {
      await cartRef.doc(cart.id).update(cartMap);
