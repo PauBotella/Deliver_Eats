@@ -1,9 +1,9 @@
 
 class UserF {
   String email, username;
-  String role;
+  String role,uid;
 
-  UserF({required this.email, required this.username, required this.role});
+  UserF({required this.email, required this.username, required this.role,required this.uid});
 
   Map<String,dynamic> toMap() {
 
@@ -15,12 +15,13 @@ class UserF {
 
   }
 
-  factory UserF.fromJson(Map<String,dynamic> json) {
+  factory UserF.fromJson(Map<String,dynamic> json,String id) {
 
     return UserF(
         email: json['email'],
         username: json['username'],
         role: json['role_ID'],
+      uid: id
     );
   }
 }

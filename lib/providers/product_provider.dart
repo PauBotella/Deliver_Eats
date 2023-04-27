@@ -17,7 +17,6 @@ class ProductProvider {
           rating: typeData['rating']);
       products.add(product);
     }
-    print('alberto');
     return await Future.value(products);
   }
 }

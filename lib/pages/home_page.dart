@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
                 UserProvider.addUser(UserF(
                     email: user.email!,
                     username: user.email!.split('@')[0],
+                    uid: '',
                     role: "cliente"));
                 MyPreferences.isUserCreated = true;
               } else {

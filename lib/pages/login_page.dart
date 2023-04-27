@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         MyPreferences.email = email;
         MyPreferences.password = password;
-        UserProvider.addUser(UserF(email: user.email!, username: user.email!.split('@')[0], role: "cliente"));
+        UserProvider.addUser(UserF(email: user.email!, username: user.email!.split('@')[0], role: "cliente", uid: ''));
         Navigator.pushReplacementNamed(context, 'home');
       }
     });

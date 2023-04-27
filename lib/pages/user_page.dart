@@ -42,10 +42,10 @@ class UserPage extends StatelessWidget {
         .then((QuerySnapshot snapshot) {
       if (snapshot.docs.isNotEmpty) {
         for (var element in snapshot.docs) {
-          return UserF.fromJson(element.data() as Map<String, dynamic>);
+          return UserF.fromJson(element.data() as Map<String, dynamic>,snapshot.docs[0].id);
         }
       }
-      return UserF(email: '', username: '', role: '');
+      return UserF(email: '', username: '', role: '',uid: '');
     });
 
     Map<String, Function()> getOptionsList(UserF user) {
