@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/product.dart';
 
 class ProductProvider {
+  static final CollectionReference productsRef = FirebaseFirestore.instance.collection('products');
   Future<List<Product>> getListFromRestaurants(List<DocumentReference> list) async {
     List<Product> products = [];
     for (int i = 0; i < list.length; i++) {

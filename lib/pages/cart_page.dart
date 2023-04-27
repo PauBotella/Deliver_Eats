@@ -120,6 +120,7 @@ class _CartPageState extends State<CartPage> {
   void suma1(int index) {
     setState(() {
       cartList[index].cantidad++;
+      CartProvider().updateCart(cartList[index]);
     });
     _loadData();
   }
@@ -127,9 +128,12 @@ class _CartPageState extends State<CartPage> {
   void borrar(int index) {
     setState(() {
       if (cartList[index].cantidad <= 1) {
+        CartProvider().deleteCart(cartList[index].id);
         cartList.removeAt(index);
+
       } else {
         cartList[index].cantidad--;
+        CartProvider().updateCart(cartList[index]);
       }
     });
     _loadData();
