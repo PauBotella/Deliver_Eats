@@ -9,7 +9,6 @@ class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Product product = ModalRoute.of(context)!.settings.arguments! as Product;
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
 
