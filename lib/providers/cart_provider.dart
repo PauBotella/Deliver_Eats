@@ -5,7 +5,7 @@ import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
 
 class CartProvider {
-  final CollectionReference _cartRef =
+  final CollectionReference cartRef =
       FirebaseFirestore.instance.collection('cart');
 
   Future<List<Cart>> getCarts() {
@@ -13,10 +13,10 @@ class CartProvider {
     List<Cart> carts = [];
     Future<List<Cart>> list =user.then((value) {
       DocumentReference doc = UserProvider.usersRef.doc(value.uid);
-      _cartRef.where('user_ID', isEqualTo: doc).get().then(
+      cartRef.where('user_ID', isEqualTo: doc).get().then(
         (QuerySnapshot query) {
           for (var element in query.docs) {
-            Cart cart = Cart.fromJson(element.data()! as Map<String, dynamic>);
+            Cart cart = Cart.fromJson(element.data()! as Map<String, dynamic>,doc.id);
             carts.add(cart);
           }
 
@@ -26,4 +26,18 @@ class CartProvider {
     });
     return list;
   }
+
+  updateCart(Cart cart) async{
+
+    Map<String,dynamic> cartMap = await Cart.toMap(cart);
+
+    try {
+     await cartRef.doc(cart.id).update(cartMap);
+     print('Carrito actualizado');
+    } catch (e) {
+      print('Error actualizando carrito'+ e.toString());
+    }
+
+  }
+
 }

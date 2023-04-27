@@ -41,7 +41,7 @@ class Restaurant {
     for(DocumentReference<Map<String, dynamic>> docRef in productRef) {
       DocumentSnapshot<Map<String, dynamic>> productSnapshot = await docRef.get();
       final Map<String, dynamic> productData = productSnapshot.data()!;
-      paco.add(Product.fromJson(productData));
+      paco.add(Product.fromJson(productData,docRef.id));
     }
     return paco;
   }

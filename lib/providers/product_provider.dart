@@ -9,12 +9,7 @@ class ProductProvider {
       DocumentReference<Map<String, dynamic>> reference = list[i] as DocumentReference<Map<String, dynamic>>;
       DocumentSnapshot<Map<String, dynamic>> typeSnapshot = await reference.get();
       final Map<String, dynamic> typeData = typeSnapshot.data()!;
-      Product product = Product(
-          name: typeData['name'],
-          description: typeData['description'],
-          image: typeData['image'],
-          price: typeData['price'],
-          rating: typeData['rating']);
+      Product product = Product.fromJson(typeData, reference.id);
       products.add(product);
     }
     return await Future.value(products);

@@ -4,6 +4,7 @@ import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../models/product.dart';
+import 'package:intl/intl.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   late Future<List<Cart>> carts;
   List<Cart> cartList = [];
+  double precio = 0.0;
+  bool primeraVez = false;
 
   @override
   void initState() {
@@ -27,6 +30,11 @@ class _CartPageState extends State<CartPage> {
     var list = await carts;
     setState(() {
       cartList = list;
+      list.forEach((element) {
+        element.product.then((value) {
+          precio += value.price;
+        });
+      });
     });
   }
 
@@ -45,19 +53,6 @@ class _CartPageState extends State<CartPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-                  child: Text('Listado de productos'),
-                ),
-                Text('Total precio')
-              ],
-            ),
-            const Divider(
-              color: Colors.white,
-              thickness: 5,
-            ),
             Expanded(
               child: ListView.builder(
                 itemCount: cartList.length,
@@ -67,22 +62,24 @@ class _CartPageState extends State<CartPage> {
                       motion: DrawerMotion(),
                       children: [
                         SlidableAction(
+                          key: UniqueKey(),
                           autoClose: false,
-                          onPressed: suma1,
+                          onPressed: (BuildContext context) => suma1(index),
                           backgroundColor: Colors.indigo,
                           icon: Icons.add,
                           label: 'Añadir',
                         ),
                         SlidableAction(
+                          key: UniqueKey(),
                           autoClose: false,
-                          onPressed: borrar,
+                          onPressed: (BuildContext context) => borrar(index),
                           backgroundColor: Colors.red,
                           icon: Icons.delete_forever,
                           label: 'Borrar',
                         )
                       ],
                     ),
-                    child: _ProductSlider(
+                    child: _productSlider(
                       cartList[index].product,
                       cartList[index].cantidad,
                     ),
@@ -96,29 +93,45 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  _ProductSlider(Future<Product> product, int cantidad) {
+  _productSlider(Future<Product> product, int cantidad) {
     return FutureBuilder(
         future: product,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshotD) {
           if (snapshotD.hasData) {
+            Product product = snapshotD.data!;
             return ListTile(
-                title: Row(children: [
-              Text(snapshotD.data.name),
-              Padding(
-                  padding: const EdgeInsets.only(left: 100, top: 20),
-                  child: Text(cantidad.toString()))
-            ]));
+              title: Text(product.name),
+              subtitle: Text(
+                  '${NumberFormat("#,##0.00", "es_ES").format(product.price * cantidad)}€'),
+              trailing: Wrap(
+                children: [
+                  Text(cantidad.toString(),style: TextStyle(fontSize: 17),),
+                  SizedBox(width: 70,),
+                  Icon(Icons.arrow_forward_ios)
+                ],
+              ),
+            );
           } else {
             return Container();
           }
         });
   }
 
-  void suma1(BuildContext context) {
-    print('sumar1');
+  void suma1(int index) {
+    setState(() {
+      cartList[index].cantidad++;
+    });
+    _loadData();
   }
 
-  void borrar(BuildContext context) {
-    print('borrar');
+  void borrar(int index) {
+    setState(() {
+      if (cartList[index].cantidad <= 1) {
+        cartList.removeAt(index);
+      } else {
+        cartList[index].cantidad--;
+      }
+    });
+    _loadData();
   }
 }
