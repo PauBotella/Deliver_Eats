@@ -25,7 +25,7 @@ class _SplashState extends State<Splash> {
   }
 
   timer(){
-    return Timer(const Duration(seconds: 3,milliseconds: 5),route);
+    return Timer(const Duration(seconds: 4),route);
   }
 
   route() {
