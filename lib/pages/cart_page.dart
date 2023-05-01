@@ -22,7 +22,7 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    carts = CartProvider().getCarts();
+    carts = CartProvider.getCarts();
     _loadData();
   }
 
@@ -46,7 +46,7 @@ class _CartPageState extends State<CartPage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.widgetColor,
+        backgroundColor: Colors.black54,
         onPressed: () {},
         child: const Icon(Icons.add_card),
       ),
@@ -100,14 +100,14 @@ class _CartPageState extends State<CartPage> {
           if (snapshotD.hasData) {
             Product product = snapshotD.data!;
             return ListTile(
-              title: Text(product.name),
+              title: Text(product.name,style: AppTheme.subtitleStyle,),
               subtitle: Text(
-                  '${NumberFormat("#,##0.00", "es_ES").format(product.price * cantidad)}€'),
+                  '${NumberFormat("#,##0.00", "es_ES").format(product.price * cantidad)} ${AppTheme.euroTxt}',style: AppTheme.priceStyle,),
               trailing: Wrap(
                 children: [
-                  Text(cantidad.toString(),style: TextStyle(fontSize: 17),),
+                  Text(cantidad.toString(),style: TextStyle(fontSize: 17,color: Colors.lightBlueAccent),),
                   SizedBox(width: 70,),
-                  Icon(Icons.arrow_forward_ios)
+                  Icon(Icons.arrow_forward_ios,color: Colors.teal,)
                 ],
               ),
             );
@@ -128,7 +128,7 @@ class _CartPageState extends State<CartPage> {
   void borrar(int index) {
     setState(() {
       if (cartList[index].cantidad <= 1) {
-        CartProvider().deleteCart(cartList[index].id);
+        CartProvider.deleteCart(cartList[index].id);
         cartList.removeAt(index);
 
       } else {

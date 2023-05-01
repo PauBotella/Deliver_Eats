@@ -11,7 +11,7 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = TextEditingController();
     return AlertDialog(
-      title: const Text('Modificar Nombre de usuario'),
+      title: const Text('Modificar Nombre de usuario',style: AppTheme.subtitleStyle,),
       backgroundColor: AppTheme.widgetColor,
       content: TextFormField(
         keyboardType: TextInputType.emailAddress,

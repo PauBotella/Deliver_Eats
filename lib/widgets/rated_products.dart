@@ -1,4 +1,5 @@
 import 'package:deliver_eats/models/restaurant.dart';
+import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';
@@ -28,7 +29,7 @@ class RatedProducts extends StatelessWidget {
                 Center(
                   child: Text(
                     'Más votados',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: AppTheme.titleStyle,
                   ),
                 ),
                 const SizedBox(
@@ -70,13 +71,14 @@ card(Product product, BuildContext context) {
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 3,
         ),
         Text(
           product.name,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
+          style: AppTheme.subtitleStyle,
         ),
       ],
     ),

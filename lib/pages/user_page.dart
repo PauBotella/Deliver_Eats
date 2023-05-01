@@ -35,15 +35,15 @@ class UserPage extends StatelessWidget {
                 'Modificar Datos': () => _modify(context,snapshot.data!)
               };
               Map<String, Function()> encargadoOptions = {
-                'Crear Producto': () => print('crear'),
+                'Productos': () => print('crear'),
                 'Ver registros': () => print('ver')
               };
               encargadoOptions.addAll(clientOptions);
               Map<String, Function()> adminOptions =
               Map<String, Function()>.from(clientOptions);
               adminOptions.addAll(encargadoOptions);
-              adminOptions['Crear Restaurante'] =
-                  () => print('crear restaurante');
+              adminOptions['Restaurantes'] =
+                  () => _goRestaurants(context);
 
               Map<String, Function()> getOptionsList(UserF user) {
                 if (user.role == 'cliente') {
@@ -77,7 +77,7 @@ class UserPage extends StatelessWidget {
                       const SizedBox(
                         height: 25,
                       ),
-                      Text(user.username),
+                      Text(user.username,style: AppTheme.titleStyle,),
                       const SizedBox(
                         height: 30,
                       ),
@@ -89,8 +89,8 @@ class UserPage extends StatelessWidget {
                             itemCount: keys.length,
                             itemBuilder: (BuildContext context, int index) {
                               return ListTile(
-                                trailing: Icon(Icons.keyboard_arrow_right),
-                                title: Text(keys[index]),
+                                trailing: Icon(Icons.keyboard_arrow_right,color: Colors.teal,),
+                                title: Text(keys[index],style: AppTheme.subtitleStyle,),
                                 onTap: values[index],
                               );
                             },
@@ -120,6 +120,10 @@ _logOut(BuildContext context) {
     MyPreferences.password = '';
     Navigator.pushReplacementNamed(context, 'login');
   });
+}
+
+_goRestaurants(BuildContext context) {
+  Navigator.pushNamed(context, 'Rcrud');
 }
 
 _modify(BuildContext context,UserF userF) {

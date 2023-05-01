@@ -1,3 +1,7 @@
+import 'package:deliver_eats/models/cart.dart';
+import 'package:deliver_eats/models/user.dart';
+import 'package:deliver_eats/providers/cart_provider.dart';
+import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +13,7 @@ class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Product product = ModalRoute.of(context)!.settings.arguments! as Product;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
 
@@ -52,18 +57,24 @@ class ProductDetail extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.star,color: Colors.yellow,),
-                      Text(product.rating.toString())
+                      Text(product.rating.toString(),style: AppTheme.ratingStyle,)
                     ],
                   ),
                 ),
               const SizedBox(height: 50,),
-              Text('Por tan solo un total de ' + product.price.toString() + " Euros"),
+              Row(
+                  children: [
+                    SizedBox(width: size.width-320,),
+                  Text('Por tan solo un total de ',style: AppTheme.subtitleStyle,),
+                    Text(product.price.toString() + " " + AppTheme.euroTxt,style: AppTheme.priceStyle,),
+          ]),
               const SizedBox(height: 50,),
               Padding(
                 padding: EdgeInsets.all(20),
                 child: Text(
                   product.description,
                   textAlign: TextAlign.justify,
+                  style: AppTheme.subtitleStyle,
                 ),
               ),
               const SizedBox(
@@ -72,7 +83,9 @@ class ProductDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _addProductToCart(Future.value(product), context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
                     shape: RoundedRectangleBorder(
@@ -97,4 +110,15 @@ class ProductDetail extends StatelessWidget {
 
     );
   }
+}
+_addProductToCart(Future<Product> product,BuildContext context) async {
+
+  Future<UserF> user =  UserProvider.getCurrentuser();
+
+  Cart cart = Cart(cantidad: 1, user: user, id: '', product: product);
+
+  CartProvider.addCart(cart);
+
+  Navigator.pushReplacementNamed(context, 'home');
+
 }

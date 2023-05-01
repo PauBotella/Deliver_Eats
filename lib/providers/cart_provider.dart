@@ -4,10 +4,10 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 
 class CartProvider {
-  final CollectionReference cartRef =
+  static final CollectionReference cartRef =
       FirebaseFirestore.instance.collection('cart');
 
-  Future<List<Cart>> getCarts() {
+  static Future<List<Cart>> getCarts() {
     Future<UserF> user = UserProvider.getCurrentuser();
     List<Cart> carts = [];
     Future<List<Cart>> list =user.then((value) {
@@ -39,7 +39,7 @@ class CartProvider {
 
   }
 
-  deleteCart(String id) async {
+  static deleteCart(String id) async {
     try {
       await cartRef.doc(id).delete();
       print('Carrito borrado');
@@ -48,4 +48,14 @@ class CartProvider {
     }
   }
 
+  static addCart(Cart cart) async{
+
+    try {
+      await cartRef.add(await cart.toMap());
+      print('Carrito Añadido');
+    } catch (e) {
+      print('Error añadiendo carrito $e');
+    }
+
+  }
 }

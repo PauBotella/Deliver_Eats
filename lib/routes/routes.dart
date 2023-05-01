@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
+import '../pages/restaurant_crud.dart';
 import '../pages/restaurant_page.dart';
 import '../pages/splashScreen_page.dart';
 Map<String,WidgetBuilder> getRoutes() {
@@ -16,6 +17,7 @@ Map<String,WidgetBuilder> getRoutes() {
       'splashScreen': (BuildContext context) => Splash(),
       'products': (BuildContext context) => ProductPage(),
       'details': (BuildContext context) => ProductDetail(),
+      'Rcrud': (BuildContext context) => CrudRestaurantPage()
     };
 }
 

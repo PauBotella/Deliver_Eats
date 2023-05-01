@@ -83,15 +83,18 @@ class _RestaurantCardBody extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(restaurant.name),
+              Text(restaurant.name,style: AppTheme.titleStyle,),
             ],
           ),
           
-          Text(restaurant.type),
-
+          Text("Cocina "+ restaurant.type,style: AppTheme.subtitleStyle,),
+          const SizedBox(
+            height: 6,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               const Icon(
                 Icons.star,
                 size: 20,
@@ -102,11 +105,14 @@ class _RestaurantCardBody extends StatelessWidget {
               ),
               Text(
                 restaurant.rating.toString(),
+                style: AppTheme.ratingStyle,
               )
             ],
           ),
-          Text('Pedido Mínimo' + restaurant.minimumOrder.toString()),
-          Text(restaurant.address),
+          const SizedBox(
+            height: 6,
+          ),
+          Text(restaurant.address, style: TextStyle(color: Colors.pinkAccent,fontWeight: FontWeight.bold),),
           const SizedBox(
             height: 10,
           )

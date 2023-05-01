@@ -192,6 +192,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         MyPreferences.email = _controllerEmail.text;
         MyPreferences.password = _controllerPassword.text;
+        MyPreferences.isUserCreated = true;
         Navigator.pushReplacementNamed(context, 'home');
       }
     });
@@ -203,6 +204,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         MyPreferences.email = email;
         MyPreferences.password = password;
+        MyPreferences.isUserCreated = true;
         UserProvider.addUser(UserF(email: user.email!, username: user.email!.split('@')[0], role: "cliente", uid: ''));
         Navigator.pushReplacementNamed(context, 'home');
       }
