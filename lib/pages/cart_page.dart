@@ -16,7 +16,6 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   late Future<List<Cart>> carts;
   List<Cart> cartList = [];
-  double precio = 0.0;
   bool primeraVez = false;
 
   @override
@@ -30,11 +29,6 @@ class _CartPageState extends State<CartPage> {
     var list = await carts;
     setState(() {
       cartList = list;
-      list.forEach((element) {
-        element.product.then((value) {
-          precio += value.price;
-        });
-      });
     });
   }
 
@@ -47,7 +41,7 @@ class _CartPageState extends State<CartPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black54,
-        onPressed: () {},
+        onPressed: () => _dialogPedido(),
         child: const Icon(Icons.add_card),
       ),
       body: SafeArea(
@@ -100,14 +94,28 @@ class _CartPageState extends State<CartPage> {
           if (snapshotD.hasData) {
             Product product = snapshotD.data!;
             return ListTile(
-              title: Text(product.name,style: AppTheme.subtitleStyle,),
+              title: Text(
+                product.name,
+                style: AppTheme.subtitleStyle,
+              ),
               subtitle: Text(
-                  '${NumberFormat("#,##0.00", "es_ES").format(product.price * cantidad)} ${AppTheme.euroTxt}',style: AppTheme.priceStyle,),
+                '${NumberFormat("#,##0.00", "es_ES").format(product.price * cantidad)} ${AppTheme.euroTxt}',
+                style: AppTheme.priceStyle,
+              ),
               trailing: Wrap(
                 children: [
-                  Text(cantidad.toString(),style: TextStyle(fontSize: 17,color: Colors.lightBlueAccent),),
-                  SizedBox(width: 70,),
-                  Icon(Icons.arrow_forward_ios,color: Colors.teal,)
+                  Text(
+                    cantidad.toString(),
+                    style:
+                        TextStyle(fontSize: 17, color: Colors.lightBlueAccent),
+                  ),
+                  SizedBox(
+                    width: 70,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.teal,
+                  )
                 ],
               ),
             );
@@ -130,12 +138,58 @@ class _CartPageState extends State<CartPage> {
       if (cartList[index].cantidad <= 1) {
         CartProvider.deleteCart(cartList[index].id);
         cartList.removeAt(index);
-
       } else {
         cartList[index].cantidad--;
         CartProvider().updateCart(cartList[index]);
       }
     });
     _loadData();
+  }
+
+  _dialogPedido() async {
+    double precio = 0.0;
+    for (Cart cart in cartList) {
+      Product product = await cart.product;
+      precio += product.price * cart.cantidad;
+    }
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+                child: const Text(
+              'Pedido',
+              style: AppTheme.titleStyle,
+            )),
+            backgroundColor: AppTheme.widgetColor,
+            content: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                child: Row(children: [
+                  Text(
+                    'Coste Total pedido',
+                    style: AppTheme.subtitleStyle,
+                  ),
+                  Text(
+                    ' ${NumberFormat("#,##0.00", "es_ES").format(precio)} ${AppTheme.euroTxt}',
+                    style: AppTheme.priceStyle,
+                  )
+                ])),
+            actions: [
+              TextButton(
+                  onPressed: () {},
+                  child: const Text('Hacer pedido',
+                      style: TextStyle(color: Colors.blue))),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Cancelar',
+                    style: TextStyle(color: Colors.red),
+                  )),
+            ],
+          );
+        });
   }
 }
