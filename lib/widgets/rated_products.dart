@@ -18,7 +18,14 @@ class RatedProducts extends StatelessWidget {
         child: FutureBuilder(
           future: restaurant.products,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+
+
             if (snapshot.hasData) {
+
+              if(snapshot.data.length == 0) {
+                return Container();
+              }
+
               for (Product p in snapshot.data) {
                 if (p.rating > 4) rateds.add(p);
               }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/product.dart';
 import 'package:deliver_eats/models/restaurant.dart';
+import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 
@@ -12,16 +13,31 @@ class ProductSwipper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<List<Product>> list = restaurant.products;
-    return FutureBuilder(
-      future: list,
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if(snapshot.hasData) {
-          return cardContent(context, snapshot.data);
-        }
+    try {
+      return FutureBuilder(
+        future: list,
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if(snapshot.hasData) {
 
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
+            if(snapshot.data.length == 0) {
+              return Center(child: Column(
+                children: [
+                  SizedBox(height: 300,),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 20),child: Text('Este restaurante no tiene productos todavia',style: AppTheme.titleStyle,)),
+                  CircularProgressIndicator()
+                ],
+              ));
+            }
+
+            return cardContent(context, snapshot.data);
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+    } catch (e) {
+      return Container();
+    }
+
   }
 }
 
