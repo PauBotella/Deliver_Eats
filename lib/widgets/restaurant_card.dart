@@ -1,6 +1,7 @@
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../models/restaurant.dart';
 
@@ -104,7 +105,7 @@ class _RestaurantCardBody extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                restaurant.rating.toString(),
+                  '${NumberFormat("#,#0.0", "es_ES").format(restaurant.rating)}' ,
                 style: AppTheme.ratingStyle,
               )
             ],

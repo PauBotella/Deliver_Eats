@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-import '../models/product.dart';
 import '../models/restaurant.dart';
 import '../providers/restaurant_provider.dart';
 import '../theme/app_theme.dart';
@@ -25,7 +26,7 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black54,
-        onPressed: () {},
+        onPressed: () {Navigator.pushNamed(context, 'AddUpdateR');},
         child: const Icon(Icons.add),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -101,4 +102,3 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
       RestaurantProvider.deleteRestaurant(restaurant.id);
   }
 }
-

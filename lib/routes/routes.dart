@@ -4,6 +4,7 @@ import 'package:deliver_eats/pages/product_page.dart';
 import 'package:deliver_eats/pages/user_page.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/add_update_restaurant_page.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 import '../pages/restaurant_crud_page.dart';
@@ -17,7 +18,8 @@ Map<String,WidgetBuilder> getRoutes() {
       'splashScreen': (BuildContext context) => Splash(),
       'products': (BuildContext context) => ProductPage(),
       'details': (BuildContext context) => ProductDetail(),
-      'Rcrud': (BuildContext context) => CrudRestaurantPage()
+      'Rcrud': (BuildContext context) => CrudRestaurantPage(),
+      'AddUpdateR': (BuildContext context) => AddUpdateRestaurant(),
     };
 }
 

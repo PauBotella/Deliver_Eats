@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
 import '../services/auth_service_google.dart';
+import '../utils/dialog.dart';
 import '../utils/preferences.dart';
 import '../widgets/custom_input.dart';
 
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       await FbAuth().signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
     } on FirebaseAuthException catch (ex) {
-      _dialog(ex.message!);
+      dialog(ex.message!,context);
       setState(() {});
     }
   }
@@ -39,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
       //Cambiar mensaje de la excepción
-      _dialog(ex.message!);
+      dialog(ex.message!,context);
       setState(() {});
     }
   }
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
       //Cambiar mensaje de la excepción
-      _dialog(ex.message!);
+      dialog(ex.message!,context);
       setState(() {});
     }
   }
@@ -227,17 +228,8 @@ class _LoginPageState extends State<LoginPage> {
       _singInEmail2(context, email, password);
 //Cambiar mensaje de la excepción
     } on FormatException catch (ex) {
-      _dialog(ex.message);
+      dialog(ex.message,context);
     }
   }
 
-  void _dialog(String msg) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(msg),
-          );
-        });
-  }
 }

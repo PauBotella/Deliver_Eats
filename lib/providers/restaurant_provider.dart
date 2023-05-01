@@ -14,25 +14,25 @@ class RestaurantProvider {
 
     try {
       await _restaurantRef.doc(restaurant.id).update(cartMap);
-      print('Carrito actualizado');
+      print('Restaurante actualizado');
     } catch (e) {
-      print('Error actualizando carrito$e');
+      print('Error actualizando Restaurante $e');
     }
 
   }
 
-
+*/
 
   static addRestaurant(Restaurant restaurant) async{
 
     try {
-      await cartRef.add(await cart.toMap());
-      print('Carrito Añadido');
+      await restaurantRef.add(await Restaurant.toMap(restaurant));
+      print('Restaurante Añadido');
     } catch (e) {
-      print('Error añadiendo carrito $e');
+      print('Error añadiendo Restaurante $e');
     }
 
-  }*/
+  }
 
   static deleteRestaurant(String id) async {
     try {
