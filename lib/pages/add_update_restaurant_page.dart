@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/product.dart';
 import 'package:deliver_eats/models/restaurant.dart';
+import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/restaurant_provider.dart';
+import 'package:deliver_eats/providers/user_provider.dart';
+import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/services/upload_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
@@ -87,7 +91,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: 'Nombre restaurante',
+                    inputTxt: 'Ej: pekin muralla',
                     icon: Icons.account_circle_outlined,
                     controller: nameController),
                 SizedBox(
@@ -99,7 +103,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: 'Nombre restaurante',
+                    inputTxt: 'Ej: calle chabolas 12',
                     icon: Icons.abc,
                     controller: addresController),
                 SizedBox(
@@ -111,7 +115,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: 'Nombre restaurante',
+                    inputTxt: 'Ej: china',
                     icon: Icons.abc,
                     controller: typeController),
                 SizedBox(
@@ -185,11 +189,39 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
         id: '',
         products: list,
         rating: randomRating);
+
+    QuerySnapshot<Object?> comprobar = await RestaurantProvider.restaurantRef
+        .where('name', isEqualTo: restaurant.name)
+        .get();
     
-    RestaurantProvider.addRestaurant(restaurant);
-    
+    if(comprobar.docs.isEmpty) {
+      await RestaurantProvider.addRestaurant(restaurant);
+      await _createUserFromRestaurant(restaurant);
+    } else {
+      dialog("Ese nombre de restaurante ya existe", context);
+    }
   }
 
+  _createUserFromRestaurant(Restaurant restaurant) async {
+    QuerySnapshot<Object?> comprobar = await RestaurantProvider.restaurantRef
+        .where('name', isEqualTo: restaurant.name)
+        .get();
+    
+    String id = comprobar.docs[0].id;
+    String email = restaurant.name.replaceAll(' ', '').toLowerCase() + "@gmail.com";
+    print(email);
+    String password = restaurant.name.replaceAll(' ', '');
+    print(password);
+
+    await FbAuth().createUserWithEmailAndPassword(email: email, password: password);
+    
+    UserF encargado = UserF(email: email, username: email.split("@")[0], role: 'encargado', uid: '', restaurant: Future.value(Restaurant.fromJson(comprobar.docs[0].data() as Map<String, dynamic>, id)));
+
+    await UserProvider.addUser(encargado);
+
+  }
+  
+  
 
 }
 

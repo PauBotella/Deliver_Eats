@@ -7,8 +7,8 @@ import '../services/auth_service.dart';
 class UserProvider {
   static final CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
 
-  static addUser(UserF user) {
-    usersRef.add(user.toMap());
+  static addUser(UserF user) async {
+    usersRef.add( await user.toMap());
   }
 
   static Future<UserF> getCurrentuser() {
@@ -26,7 +26,7 @@ class UserProvider {
   static updateUser(UserF user) async{
 
     try {
-      Map<String,dynamic> userMap = user.toMap();
+      Map<String,dynamic> userMap = await user.toMap();
       await usersRef.doc(user.uid).update(userMap);
       print('Usuario actualizado');
     } catch (e) {
