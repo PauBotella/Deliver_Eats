@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/product.dart';
+import 'package:deliver_eats/providers/restaurant_provider.dart';
 
 class Restaurant {
   String address;
   String name;
-  double minimumOrder;
+  String id;
   double rating;
   String type;
   String image;
@@ -14,24 +15,45 @@ class Restaurant {
   Restaurant({
     required this.address,
     required this.image,
-    required this.minimumOrder,
     required this.name,
     required this.type,
+    required this.id,
     required this.products,
     required this.rating
 
   });
 
-  static Restaurant fromJson(Map<String, dynamic> json) {
+  static Restaurant fromJson(Map<String, dynamic> json, String id) {
     return Restaurant(
         address: json['address'],
         image: json['image'],
-        minimumOrder: json['minimum_order'].toDouble(),
         name: json['name'],
         type: json['type'],
+        id: id,
         rating: json['rating'].toDouble(),
         products: getProducts(json)
     );
+  }
+
+  static Future<Map<String, dynamic>> toMap(Restaurant restaurant) async {
+
+    List<Product> products = await restaurant.products;
+
+    List<DocumentReference> refList = [];
+
+    products.forEach((element) {
+      refList.add(RestaurantProvider.restaurantRef.doc(element.id));
+    });
+
+    return {
+      'address' : restaurant.address,
+      'image' : restaurant.image,
+      'name' : restaurant.name,
+      'type' : restaurant.type,
+      'rating' : restaurant.rating,
+      'products' : refList,
+
+    };
   }
 
   static Future<List<Product>> getProducts(Map<String, dynamic> json) async {

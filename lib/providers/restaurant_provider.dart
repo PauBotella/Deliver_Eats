@@ -1,9 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:deliver_eats/models/restaurant.dart';
 
 class RestaurantProvider {
-  final CollectionReference _collectionRef = FirebaseFirestore.instance.collection('restaurants');
+  static final CollectionReference restaurantRef = FirebaseFirestore.instance.collection('restaurants');
   Stream<QuerySnapshot<Map<String,dynamic>>>getRestaurants() {
-    Stream<QuerySnapshot<Map<String,dynamic>>> stream = _collectionRef.snapshots() as Stream<QuerySnapshot<Map<String,dynamic>>>;
+    Stream<QuerySnapshot<Map<String,dynamic>>> stream = restaurantRef.snapshots() as Stream<QuerySnapshot<Map<String,dynamic>>>;
     return stream;
   }
+
+  /*updateRestaurant(Restaurant restaurant) async{
+
+    Map<String,dynamic> cartMap = await restaurant.toMap();
+
+    try {
+      await _restaurantRef.doc(restaurant.id).update(cartMap);
+      print('Carrito actualizado');
+    } catch (e) {
+      print('Error actualizando carrito$e');
+    }
+
+  }
+
+
+
+  static addRestaurant(Restaurant restaurant) async{
+
+    try {
+      await cartRef.add(await cart.toMap());
+      print('Carrito Añadido');
+    } catch (e) {
+      print('Error añadiendo carrito $e');
+    }
+
+  }*/
+
+  static deleteRestaurant(String id) async {
+    try {
+      await restaurantRef.doc(id).delete();
+      print('Restaurante borrado');
+    } catch (e) {
+      print('Error borrando Restaurante $e');
+    }
+  }
+
 }

@@ -50,7 +50,7 @@ class Cart {
     UserF u = await user;
     return {
       'cantidad': cantidad,
-      'product_ID': ProductProvider.productsRef.doc(p.uid),
+      'product_ID': ProductProvider.productsRef.doc(p.id),
       'user_ID': UserProvider.usersRef.doc(u.uid)
     };
   }

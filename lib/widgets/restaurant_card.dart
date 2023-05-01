@@ -16,7 +16,7 @@ class RestaurantCard extends StatelessWidget {
     List<Restaurant> restaurants =
         snapshot.data!.docs.map<Restaurant>((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-      Restaurant restaurant = Restaurant.fromJson(data);
+      Restaurant restaurant = Restaurant.fromJson(data,document.id);
       return restaurant;
     }).toList();
 
