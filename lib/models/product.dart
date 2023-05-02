@@ -20,4 +20,16 @@ class Product {
         price: json['price'].toDouble(),
         rating: json['rating'].toDouble());
   }
+
+   Map<String,dynamic> toMap() {
+
+    return {
+      'name' : name,
+      'description' : description,
+      'image' : image,
+      'price' : price,
+      'rating' : rating,
+    };
+  }
+
 }

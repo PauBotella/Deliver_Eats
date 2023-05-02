@@ -9,10 +9,11 @@ import 'package:deliver_eats/providers/restaurant_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/services/upload_image.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/widgets/custom_input.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../utils/dialog.dart';
 
 class AddUpdateRestaurant extends StatefulWidget {
@@ -218,6 +219,9 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
     UserF encargado = UserF(email: email, username: email.split("@")[0], role: 'encargado', uid: '', restaurant: Future.value(Restaurant.fromJson(comprobar.docs[0].data() as Map<String, dynamic>, id)));
 
     await UserProvider.addUser(encargado);
+
+    enabled = true;
+    setState(() {});
 
   }
 }

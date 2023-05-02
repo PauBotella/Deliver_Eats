@@ -2,6 +2,7 @@ import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import '../models/user.dart';
 import '../providers/user_provider.dart';
 import '../services/auth_service_google.dart';

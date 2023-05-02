@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
@@ -41,7 +40,7 @@ class UserPage extends StatelessWidget {
               encargadoOptions.addAll(clientOptions);
               Map<String, Function()> adminOptions =
               Map<String, Function()>.from(clientOptions);
-              adminOptions.addAll(encargadoOptions);
+              adminOptions.addAll(clientOptions);
               adminOptions['Restaurantes'] =
                   () => _goRestaurants(context);
 

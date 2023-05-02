@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/product.dart';
+import 'package:deliver_eats/providers/product_provider.dart';
 import 'package:deliver_eats/providers/restaurant_provider.dart';
 
 class Restaurant {
@@ -35,22 +36,22 @@ class Restaurant {
     );
   }
 
-  static Future<Map<String, dynamic>> toMap(Restaurant restaurant) async {
+  Future<Map<String, dynamic>> toMap() async {
 
-    List<Product> products = await restaurant.products;
+    List<Product> list = await products;
 
     List<DocumentReference> refList = [];
 
-    products.forEach((element) {
-      refList.add(RestaurantProvider.restaurantRef.doc(element.id));
+    list.forEach((element) {
+      refList.add(ProductProvider.productsRef.doc(element.id));
     });
 
     return {
-      'address' : restaurant.address,
-      'image' : restaurant.image,
-      'name' : restaurant.name,
-      'type' : restaurant.type,
-      'rating' : restaurant.rating,
+      'address' : address,
+      'image' : image,
+      'name' : name,
+      'type' : type,
+      'rating' : rating,
       'products' : refList,
 
     };

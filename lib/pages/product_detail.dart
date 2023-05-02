@@ -4,6 +4,7 @@ import 'package:deliver_eats/providers/cart_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/product.dart';
 
@@ -57,7 +58,7 @@ class ProductDetail extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.star,color: Colors.yellow,),
-                      Text(product.rating.toString(),style: AppTheme.ratingStyle,)
+                      Text('${NumberFormat("#,#0.0", "es_ES").format(product.rating)}',style: AppTheme.ratingStyle,)
                     ],
                   ),
                 ),

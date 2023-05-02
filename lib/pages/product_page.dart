@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/restaurant.dart';
 import 'package:deliver_eats/widgets/product_card_swipper.dart';
 import 'package:deliver_eats/widgets/rated_products.dart';

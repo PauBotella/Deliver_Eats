@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/product.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,37 +5,46 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../models/restaurant.dart';
 import '../models/user.dart';
-import '../providers/restaurant_provider.dart';
+import '../providers/product_provider.dart';
 import '../theme/app_theme.dart';
 
-class CrudProductPage extends StatelessWidget {
+class CrudProductPage extends StatefulWidget {
   CrudProductPage({Key? key}) : super(key: key);
 
+  @override
+  State<CrudProductPage> createState() => _CrudProductPageState();
+}
+
+class _CrudProductPageState extends State<CrudProductPage> {
   Future<UserF> user = UserProvider.getCurrentuser();
+  late Restaurant userRestaurant;
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Restaurantes CRUD'),
+          title: const Text('Productos CRUD'),
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black54,
           onPressed: () {
-            Navigator.pushNamed(context, 'AddUpdateR');
+            Navigator.pushReplacementNamed(context, 'AddUpdateP',arguments: userRestaurant);
           },
           child: const Icon(Icons.add),
         ),
-        body: FutureBuilder(
-          future: user,
+        body: StreamBuilder(
+          stream: Stream.fromFuture(user),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.hasData) {
               return SafeArea(
                 child: Column(
                   children: [
-                    Expanded(child: FutureBuilder(
-                      future: _productSlider(snapshot.data.restaurant),
+                    Expanded(child: StreamBuilder(
+                      stream: Stream.fromFuture(_productSlider(snapshot.data.restaurant)),
                       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                         if(snapshot.hasData) {
                           return snapshot.data;
@@ -56,9 +64,9 @@ class CrudProductPage extends StatelessWidget {
         ));
   }
 
-
   Future<Widget> _productSlider(Future<Restaurant> restaurant) async {
     Restaurant r = await restaurant;
+    userRestaurant = r;
     List<Product> products = await r.products;
 
     print(products[0].name);
@@ -72,7 +80,7 @@ class CrudProductPage extends StatelessWidget {
                 SlidableAction(
                   key: UniqueKey(),
                   autoClose: false,
-                  onPressed: (BuildContext context) => print('hola'),
+                  onPressed: (BuildContext context) => _deleteProducts(products[index],index,products),
                   backgroundColor: Colors.red,
                   icon: Icons.delete_forever,
                   label: 'Borrar',
@@ -95,5 +103,13 @@ class CrudProductPage extends StatelessWidget {
                 )));
       },
     );
+  }
+
+  _deleteProducts(Product product,int index,List<Product> algo) {
+    algo.removeAt(index);
+    setState(() {
+
+    });
+    ProductProvider.deleteProduct(product.id);
   }
 }

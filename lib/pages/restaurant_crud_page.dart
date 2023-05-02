@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/restaurant.dart';
 import '../providers/restaurant_provider.dart';

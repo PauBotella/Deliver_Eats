@@ -3,8 +3,9 @@ import 'package:deliver_eats/providers/cart_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../models/product.dart';
 import 'package:intl/intl.dart';
+
+import '../models/product.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);

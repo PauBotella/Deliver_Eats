@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/product.dart';
 import 'package:deliver_eats/models/user.dart';
-import 'package:deliver_eats/providers/cart_provider.dart';
 import 'package:deliver_eats/providers/product_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 

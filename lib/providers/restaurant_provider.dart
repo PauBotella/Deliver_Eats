@@ -8,12 +8,12 @@ class RestaurantProvider {
     return stream;
   }
 
-  /*updateRestaurant(Restaurant restaurant) async{
+  static updateRestaurant(Restaurant restaurant) async{
 
     Map<String,dynamic> cartMap = await restaurant.toMap();
 
     try {
-      await _restaurantRef.doc(restaurant.id).update(cartMap);
+      await restaurantRef.doc(restaurant.id).update(cartMap);
       print('Restaurante actualizado');
     } catch (e) {
       print('Error actualizando Restaurante $e');
@@ -21,12 +21,11 @@ class RestaurantProvider {
 
   }
 
-*/
 
   static addRestaurant(Restaurant restaurant) async{
 
     try {
-      await restaurantRef.add(await Restaurant.toMap(restaurant));
+      await restaurantRef.add(await restaurant.toMap());
       print('Restaurante Añadido');
     } catch (e) {
       print('Error añadiendo Restaurante $e');

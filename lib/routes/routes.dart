@@ -1,3 +1,4 @@
+import 'package:deliver_eats/pages/add_update_product_page.dart';
 import 'package:deliver_eats/pages/cart_page.dart';
 import 'package:deliver_eats/pages/product_crud_page.dart';
 import 'package:deliver_eats/pages/product_detail.dart';
@@ -21,6 +22,7 @@ Map<String,WidgetBuilder> getRoutes() {
       'details': (BuildContext context) => ProductDetail(),
       'Rcrud': (BuildContext context) => CrudRestaurantPage(),
       'AddUpdateR': (BuildContext context) => AddUpdateRestaurant(),
+      'AddUpdateP': (BuildContext context) => AddUpdateProduct(),
       'Pcrud': (BuildContext context) => CrudProductPage(),
     };
 }

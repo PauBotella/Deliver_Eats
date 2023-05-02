@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:deliver_eats/models/product.dart';
 import 'package:deliver_eats/models/restaurant.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:card_swiper/card_swiper.dart';
 
 class ProductSwipper extends StatelessWidget {
   final Restaurant restaurant;

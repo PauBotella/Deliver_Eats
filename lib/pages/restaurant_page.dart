@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/providers/restaurant_provider.dart';
-import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/restaurant_card.dart';
