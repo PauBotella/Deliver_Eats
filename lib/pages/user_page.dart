@@ -35,7 +35,7 @@ class UserPage extends StatelessWidget {
                 'Modificar Datos': () => _modify(context,snapshot.data!)
               };
               Map<String, Function()> encargadoOptions = {
-                'Productos': () => print('crear'),
+                'Productos': () => _goProducts(context),
                 'Ver registros': () => print('ver')
               };
               encargadoOptions.addAll(clientOptions);
@@ -122,6 +122,9 @@ _logOut(BuildContext context) {
   });
 }
 
+_goProducts(BuildContext context) {
+  Navigator.pushNamed(context, 'Pcrud');
+}
 _goRestaurants(BuildContext context) {
   Navigator.pushNamed(context, 'Rcrud');
 }

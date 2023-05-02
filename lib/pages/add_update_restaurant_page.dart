@@ -220,8 +220,5 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
     await UserProvider.addUser(encargado);
 
   }
-  
-  
-
 }
 

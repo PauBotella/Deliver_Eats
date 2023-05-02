@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/restaurant.dart';
 import 'package:deliver_eats/providers/restaurant_provider.dart';
-import 'package:deliver_eats/providers/user_provider.dart';
 
 class UserF {
   String email, username;
@@ -29,21 +28,35 @@ class UserF {
         };
       }
 
-
-
-
-
-
-
   }
 
   factory UserF.fromJson(Map<String,dynamic> json,String id) {
 
-    return UserF(
-        email: json['email'],
-        username: json['username'],
-        role: json['role_ID'],
-      uid: id
-    );
+    try {
+      return UserF(
+          email: json['email'],
+          username: json['username'],
+          role: json['role_ID'],
+          restaurant: _getProduct(json['restaurant']),
+          uid: id
+      );
+    } catch (e) {
+      return UserF(
+          email: json['email'],
+          username: json['username'],
+          role: json['role_ID'],
+          uid: id
+      );
+    }
+
+
+  }
+
+  static Future<Restaurant> _getProduct(DocumentReference<Map<String, dynamic>> restauranttRef) async{
+
+    DocumentSnapshot<Map<String, dynamic>>snapshot  = await restauranttRef.get();
+    final Map<String, dynamic> restaurantData = snapshot.data()!;
+    Restaurant restaurant = Restaurant.fromJson(restaurantData,restauranttRef.id);
+    return restaurant;
   }
 }
