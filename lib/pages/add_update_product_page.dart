@@ -234,7 +234,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
       completed = true;
       diaglogResult(completed, 'Producto añadido con exito', context);
     } catch (e) {
-      diaglogResult(completed, e.toString().split(":")[1], context);
+      diaglogResult(completed, e.toString(), context);
     }
 
   }

@@ -180,7 +180,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
 
         });
         dialog('no puedes dejar ningún campo vacio',context);
-        return;
+        throw Exception('no puedes dejar ningún campo vacio');
       }
 
       Future<List<Product>> list = Future.value([]);
@@ -204,12 +204,12 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
         diaglogResult(complete, 'Restaurante creado con éxito', context);
       } else {
         complete = false;
-        diaglogResult(complete, 'El nombre de ese restaurante ya existe', context);
+        throw Exception('El nombre de ese restaurante ya existe');
       }
 
     } catch (e) {
       complete = false;
-      diaglogResult(complete, 'Error: '+e.toString().split(":")[1], context);
+      diaglogResult(complete, e.toString(), context);
     }
   }
 
