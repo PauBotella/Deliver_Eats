@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 final FirebaseStorage storage = FirebaseStorage.instance;
 
 Future<String> uploadImage(File image,String path) async{
-  print('llamada a subir imagen');
   final name = image.path.split('/')[0] +"-"+ Uuid().v4();
   
   Reference ref = storage.ref().child(path).child(name);

@@ -157,49 +157,59 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
   }
 
   _addRestaurant(File image) async {
-    enabled = false;
-    setState(() {
-
-    });
-    String imageUrl = await uploadImage(image, '/restaurants');
-    
-    double randomRating = Random().nextDouble() * 5;
-    if (randomRating < 1) {
-      randomRating++;
-    }
-
-    String address = addresController.text;
-    String name = nameController.text;
-    String type = typeController.text;
-
-    if(address.isEmpty || name.isEmpty || type.isEmpty || imageUrl.isEmpty) {
-      enabled = true;
+    bool complete;
+    try {
+      enabled = false;
       setState(() {
 
       });
-      dialog('no puedes dejar ningún campo vacio',context);
-      return;
-    }
+      String imageUrl = await uploadImage(image, '/restaurants');
 
-    Future<List<Product>> list = Future.value([]);
+      double randomRating = Random().nextDouble() * 5;
+      if (randomRating < 1) {
+        randomRating++;
+      }
 
-    Restaurant restaurant = Restaurant(address: address,
-        image: imageUrl,
-        name: name,
-        type: type,
-        id: '',
-        products: list,
-        rating: randomRating);
+      String address = addresController.text;
+      String name = nameController.text;
+      String type = typeController.text;
 
-    QuerySnapshot<Object?> comprobar = await RestaurantProvider.restaurantRef
-        .where('name', isEqualTo: restaurant.name)
-        .get();
-    
-    if(comprobar.docs.isEmpty) {
-      await RestaurantProvider.addRestaurant(restaurant);
-      await _createUserFromRestaurant(restaurant);
-    } else {
-      dialog("Ese nombre de restaurante ya existe", context);
+      if(address.isEmpty || name.isEmpty || type.isEmpty || imageUrl.isEmpty) {
+        enabled = true;
+        setState(() {
+
+        });
+        dialog('no puedes dejar ningún campo vacio',context);
+        return;
+      }
+
+      Future<List<Product>> list = Future.value([]);
+
+      Restaurant restaurant = Restaurant(address: address,
+          image: imageUrl,
+          name: name,
+          type: type,
+          id: '',
+          products: list,
+          rating: randomRating);
+
+      QuerySnapshot<Object?> comprobar = await RestaurantProvider.restaurantRef
+          .where('name', isEqualTo: restaurant.name)
+          .get();
+
+      if(comprobar.docs.isEmpty) {
+        await RestaurantProvider.addRestaurant(restaurant);
+        await _createUserFromRestaurant(restaurant);
+        complete = true;
+        diaglogResult(complete, 'Restaurante creado con éxito', context);
+      } else {
+        complete = false;
+        diaglogResult(complete, 'El nombre de ese restaurante ya existe', context);
+      }
+
+    } catch (e) {
+      complete = false;
+      diaglogResult(complete, 'Error: '+e.toString().split(":")[1], context);
     }
   }
 
@@ -210,9 +220,11 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
     
     String id = comprobar.docs[0].id;
     String email = restaurant.name.replaceAll(' ', '').toLowerCase() + "@gmail.com";
-    print(email);
     String password = restaurant.name.replaceAll(' ', '');
-    print(password);
+
+    if(password.length < 6) {
+      password += "123456";
+    }
 
     await FbAuth().createUserWithEmailAndPassword(email: email, password: password);
     
@@ -222,6 +234,8 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
 
     enabled = true;
     setState(() {});
+
+
 
   }
 }

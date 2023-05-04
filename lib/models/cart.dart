@@ -37,7 +37,7 @@ class Cart {
     return user;
   }
 
-  static Future<Product> _getProduct(DocumentReference<Map<String, dynamic>> productRef) async{
+  static Future<Product> _getProduct(DocumentReference<Map<String, dynamic>> productRef) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await productRef.get();
     final Map<String, dynamic> productData = snapshot.data()!;
     Product product = Product.fromJson(productData,productRef.id);

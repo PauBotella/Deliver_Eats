@@ -1,11 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/cart.dart';
+import 'package:deliver_eats/models/order_item.dart';
 import 'package:deliver_eats/providers/cart_provider.dart';
+import 'package:deliver_eats/providers/order_item_provider.dart';
+import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
+import '../models/orders.dart';
 import '../models/product.dart';
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -178,7 +186,9 @@ class _CartPageState extends State<CartPage> {
                 ])),
             actions: [
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _hacerPedido(precio);
+                  },
                   child: const Text('Hacer pedido',
                       style: TextStyle(color: Colors.blue))),
               TextButton(
@@ -190,6 +200,76 @@ class _CartPageState extends State<CartPage> {
                     style: TextStyle(color: Colors.red),
                   )),
             ],
+          );
+        });
+  }
+
+  _hacerPedido(double precio) async {
+    bool complete = false;
+    try {
+
+      if(cartList.isEmpty) {
+        throw Exception('Añade algún producto al carrito');
+      }
+
+      UserF user = await UserProvider.getCurrentuser();
+      DateTime hoy = DateTime.now();
+      DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+      String date = dateFormat.format(hoy);
+
+      Orders order = Orders(
+          date: date, user: Future.value(user), id: '', totalPrice: precio);
+
+      DocumentReference<Map<String,dynamic>> orderRef = await OrderProvider.addOrder(order);
+
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await orderRef.get();
+      final Map<String, dynamic> orderData = snapshot.data()!;
+      Orders firebaseOrder = Orders.fromJson(orderData, orderRef.id);
+
+
+      for (Cart c in cartList) {
+        OrderItem item = OrderItem(
+            cantidad: c.cantidad,
+            order: Future.value(firebaseOrder),
+            product: c.product);
+
+        await OrderItemProvider.addOrderItem(item);
+      }
+
+      complete = true;
+      _diaglogPayResult(complete,'');
+    } catch (e) {
+      print(e);
+      complete = false;
+      _diaglogPayResult(complete,e.toString().split(":")[1]);
+    }
+  }
+
+  _diaglogPayResult(bool compelete,String txt) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: AppTheme.widgetColor,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 200.0,
+                  width: 200.0,
+                  child: compelete == false
+                      ? Lottie.asset('assets/failed-status.json')
+                      : Lottie.asset('assets/payment-complete.json'),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(compelete == false
+                      ? 'Error: ' +txt
+                      : 'Pedido realizado con éxito',style: AppTheme.subtitleStyle,),
+                ),
+                SizedBox(height: 16.0),
+              ],
+            ),
           );
         });
   }

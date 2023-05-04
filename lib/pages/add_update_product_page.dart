@@ -152,7 +152,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                           try {
                             _addProduct(File(_selectedImage!.path));
                           } catch (e) {
-                            dialog('No puedes dejar la imagen vacia', context);
+                            diaglogResult(false, 'No puedes dejar la imagen vacia', context);
                           }
                         }
                       : () => print('Desactivado'),
@@ -182,54 +182,61 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
   }
 
   _addProduct(File image) async {
-    enabled = false;
-    setState(() {});
-    String imageUrl = await uploadImage(image, '/products');
+    bool completed = false;
+    try {
+      enabled = false;
+      setState(() {});
+      String imageUrl = await uploadImage(image, '/products');
 
-    double randomRating = Random().nextDouble() * 5;
-    if (randomRating < 1) {
-      randomRating++;
-    }
+      double randomRating = Random().nextDouble() * 5;
+      if (randomRating < 1) {
+        randomRating++;
+      }
 
-    String description = descriptionController.text;
-    String name = nameController.text;
-    String priceTxt = priceController.text;
+      String description = descriptionController.text;
+      String name = nameController.text;
+      String priceTxt = priceController.text;
 
-    if (description.isEmpty || name.isEmpty || priceTxt.isEmpty || imageUrl.isEmpty) {
+      if (description.isEmpty || name.isEmpty || priceTxt.isEmpty || imageUrl.isEmpty) {
+        enabled = true;
+        setState(() {});
+        throw Exception('No puedes dejar ningún campo vacio');
+      }
+      double price = 0.0;
+      try {
+        price = double.parse(priceTxt);
+      } catch (e) {
+        throw Exception("Introduce un precio válido");
+      }
+
+      Product product = Product(
+          image: imageUrl,
+          name: name,
+          price: price,
+          description: description,
+          id: '',
+          rating: randomRating);
+
+      QuerySnapshot<Object?> comprobar = await ProductProvider.productsRef
+          .where('name', isEqualTo: product.name)
+          .get();
+
+      if (comprobar.docs.isEmpty) {
+        await ProductProvider.addProduct(product);
+        await _addProductToRestaurant(product.name);
+      } else {
+        completed = false;
+        throw Exception("Ese nombre del producto ya existe");
+      }
+
       enabled = true;
       setState(() {});
-      dialog('no puedes dejar ningún campo vacio', context);
-      return;
-    }
-    double price = 0.0;
-    try {
-      price = double.parse(priceTxt);
+      completed = true;
+      diaglogResult(completed, 'Producto añadido con exito', context);
     } catch (e) {
-      dialog("Introduce un precio válido", context);
-      return;
+      diaglogResult(completed, e.toString().split(":")[1], context);
     }
 
-    Product product = Product(
-        image: imageUrl,
-        name: name,
-        price: price,
-        description: description,
-        id: '',
-        rating: randomRating);
-
-    QuerySnapshot<Object?> comprobar = await ProductProvider.productsRef
-        .where('name', isEqualTo: product.name)
-        .get();
-
-    if (comprobar.docs.isEmpty) {
-      await ProductProvider.addProduct(product);
-      await _addProductToRestaurant(product.name);
-    } else {
-      dialog("Ese nombre del producto ya existe", context);
-    }
-
-    enabled = true;
-    setState(() {});
   }
 
   _addProductToRestaurant(String name) async {
