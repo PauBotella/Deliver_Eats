@@ -178,7 +178,6 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
         setState(() {
 
         });
-        dialog('no puedes dejar ningún campo vacio',context);
         throw Exception('no puedes dejar ningún campo vacio');
       }
 

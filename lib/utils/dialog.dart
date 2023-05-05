@@ -3,16 +3,6 @@ import 'package:lottie/lottie.dart';
 
 import '../theme/app_theme.dart';
 
-void dialog(String msg,BuildContext context) {
-  showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: AppTheme.widgetColor,
-          title: Text(msg,style: AppTheme.subtitleStyle,),
-        );
-      });
-}
 
 diaglogResult(String txt,BuildContext context,String path) {
   showDialog(

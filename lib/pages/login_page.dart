@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       await FbAuth().signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
     } on FirebaseAuthException catch (ex) {
-      dialog(ex.message!,context);
+      diaglogResult(ex.message!, context, AppTheme.failAnimation);
       setState(() {});
     }
   }
@@ -40,8 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       await FbAuth()
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
-      //Cambiar mensaje de la excepción
-      dialog(ex.message!,context);
+      diaglogResult(ex.message!, context, AppTheme.failAnimation);
       setState(() {});
     }
   }
@@ -51,8 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       await FbAuth()
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
-      //Cambiar mensaje de la excepción
-      dialog(ex.message!,context);
+      diaglogResult(ex.message!, context, AppTheme.failAnimation);
       setState(() {});
     }
   }
@@ -227,9 +225,9 @@ class _LoginPageState extends State<LoginPage> {
       }
       createUserWithEmailAndPassword(email, password);
       _singInEmail2(context, email, password);
-//Cambiar mensaje de la excepción
+
     } on FormatException catch (ex) {
-      dialog(ex.message,context);
+      diaglogResult(ex.message, context, AppTheme.failAnimation);
     }
   }
 
