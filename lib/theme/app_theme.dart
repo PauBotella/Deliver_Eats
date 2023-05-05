@@ -14,8 +14,8 @@ class AppTheme {
   static const TextStyle ratingStyle = TextStyle(fontSize: 15,color: Colors.yellow);
   static const TextStyle priceStyle = TextStyle(color: Colors.red,fontWeight:FontWeight.bold);
 
-  static const String payAnimation = 'assets/payment-complete';
-  static const String checkAnimation = 'assets/check_animation';
+  static const String payAnimation = 'assets/payment-complete.json';
+  static const String checkAnimation = 'assets/check_animation.json';
   static const String failAnimation = 'assets/failed-status.json';
   static const String noDisponibleAnimation = 'assets/proximamente.json';
 
