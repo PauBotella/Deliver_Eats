@@ -21,7 +21,6 @@ class RestaurantProvider {
 
   }
 
-
   static addRestaurant(Restaurant restaurant) async{
 
     try {

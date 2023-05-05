@@ -152,7 +152,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                           try {
                             _addProduct(File(_selectedImage!.path));
                           } catch (e) {
-                            diaglogResult(false, 'No puedes dejar la imagen vacia', context);
+                            diaglogResult('No puedes dejar la imagen vacia', context,AppTheme.failAnimation);
                           }
                         }
                       : () => print('Desactivado'),
@@ -182,7 +182,6 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
   }
 
   _addProduct(File image) async {
-    bool completed = false;
     try {
       enabled = false;
       setState(() {});
@@ -225,16 +224,14 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
         await ProductProvider.addProduct(product);
         await _addProductToRestaurant(product.name);
       } else {
-        completed = false;
         throw Exception("Ese nombre del producto ya existe");
       }
 
       enabled = true;
       setState(() {});
-      completed = true;
-      diaglogResult(completed, 'Producto añadido con exito', context);
+      diaglogResult('Producto añadido con exito', context,AppTheme.checkAnimation);
     } catch (e) {
-      diaglogResult(completed, e.toString(), context);
+      diaglogResult(e.toString(), context,AppTheme.failAnimation);
     }
 
   }

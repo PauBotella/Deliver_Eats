@@ -5,10 +5,10 @@ import 'package:deliver_eats/providers/cart_provider.dart';
 import 'package:deliver_eats/providers/order_item_provider.dart';
 import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:deliver_eats/utils/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 
 import '../models/orders.dart';
 import '../models/product.dart';
@@ -36,9 +36,7 @@ class _CartPageState extends State<CartPage> {
 
   _loadData() async {
     var list = await carts;
-    setState(() {
-      cartList = list;
-    });
+    cartList = list;
   }
 
   @override
@@ -97,8 +95,8 @@ class _CartPageState extends State<CartPage> {
   }
 
   _productSlider(Future<Product> product, int cantidad) {
-    return FutureBuilder(
-        future: product,
+    return StreamBuilder(
+        stream: Stream.fromFuture(product),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshotD) {
           if (snapshotD.hasData) {
             Product product = snapshotD.data!;
@@ -129,7 +127,7 @@ class _CartPageState extends State<CartPage> {
               ),
             );
           } else {
-            return Container();
+            return Center(child: CircularProgressIndicator(),);
           }
         });
   }
@@ -205,7 +203,6 @@ class _CartPageState extends State<CartPage> {
   }
 
   _hacerPedido(double precio) async {
-    bool complete = false;
     try {
 
       if(cartList.isEmpty) {
@@ -236,41 +233,10 @@ class _CartPageState extends State<CartPage> {
         await OrderItemProvider.addOrderItem(item);
       }
 
-      complete = true;
-      _diaglogPayResult(complete,'');
+      diaglogResult('Pedido Completado', context, AppTheme.payAnimation);
     } catch (e) {
       print(e);
-      complete = false;
-      _diaglogPayResult(complete,e.toString().split(":")[1]);
+      diaglogResult(e.toString().split(":")[1],context,AppTheme.failAnimation);
     }
-  }
-
-  _diaglogPayResult(bool compelete,String txt) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            backgroundColor: AppTheme.widgetColor,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 200.0,
-                  width: 200.0,
-                  child: compelete == false
-                      ? Lottie.asset('assets/failed-status.json')
-                      : Lottie.asset('assets/payment-complete.json'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(compelete == false
-                      ? 'Error: ' +txt
-                      : 'Pedido realizado con éxito',style: AppTheme.subtitleStyle,),
-                ),
-                SizedBox(height: 16.0),
-              ],
-            ),
-          );
-        });
   }
 }

@@ -14,7 +14,7 @@ void dialog(String msg,BuildContext context) {
       });
 }
 
-diaglogResult(bool compelete,String txt,BuildContext context) {
+diaglogResult(String txt,BuildContext context,String path) {
   showDialog(
       context: context,
       builder: (context) {
@@ -26,9 +26,7 @@ diaglogResult(bool compelete,String txt,BuildContext context) {
               Container(
                 height: 200.0,
                 width: 200.0,
-                child: compelete == false
-                    ? Lottie.asset('assets/failed-status.json')
-                    : Lottie.asset('assets/check_animation.json'),
+                child:Lottie.asset(path)
               ),
               Padding(
                 padding: EdgeInsets.all(20),

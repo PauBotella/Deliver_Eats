@@ -127,7 +127,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                     try {
                       _addRestaurant(File(_selectedImage!.path));
                     } catch (e) {
-                      dialog('No puedes dejar la imagen vacia',context);
+                      diaglogResult('No puedes dejar la imagen vacia', context, AppTheme.failAnimation);
                     }
 
                   }: () => print('Desactivado'),
@@ -157,7 +157,6 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
   }
 
   _addRestaurant(File image) async {
-    bool complete;
     try {
       enabled = false;
       setState(() {
@@ -200,16 +199,13 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
       if(comprobar.docs.isEmpty) {
         await RestaurantProvider.addRestaurant(restaurant);
         await _createUserFromRestaurant(restaurant);
-        complete = true;
-        diaglogResult(complete, 'Restaurante creado con éxito', context);
+        diaglogResult('Restaurante creado con éxito', context,AppTheme.checkAnimation);
       } else {
-        complete = false;
         throw Exception('El nombre de ese restaurante ya existe');
       }
 
     } catch (e) {
-      complete = false;
-      diaglogResult(complete, e.toString(), context);
+      diaglogResult(e.toString().split(":")[1], context,AppTheme.failAnimation);
     }
   }
 

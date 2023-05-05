@@ -2,6 +2,7 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:deliver_eats/utils/dialog.dart';
 import 'package:deliver_eats/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,9 @@ class UserPage extends StatelessWidget {
               adminOptions.addAll(clientOptions);
               adminOptions['Restaurantes'] =
                   () => _goRestaurants(context);
+
+              adminOptions['Users'] =
+                  () => _goUsers(context);
 
               Map<String, Function()> getOptionsList(UserF user) {
                 if (user.role == 'cliente') {
@@ -107,9 +111,13 @@ class UserPage extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
-
+_goUsers(BuildContext context) {
+diaglogResult('En construcción', context,AppTheme.noDisponibleAnimation);
+}
 
 _logOut(BuildContext context) {
   FbAuth().firebaseAuth.signOut();

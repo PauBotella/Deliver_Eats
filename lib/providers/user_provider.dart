@@ -24,7 +24,6 @@ class UserProvider {
   }
 
   static updateUser(UserF user) async{
-
     try {
       Map<String,dynamic> userMap = await user.toMap();
       await usersRef.doc(user.uid).update(userMap);
@@ -32,7 +31,5 @@ class UserProvider {
     } catch (e) {
       print('Usuario actualizando carrito$e');
     }
-
   }
-
 }

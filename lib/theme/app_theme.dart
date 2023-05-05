@@ -6,12 +6,18 @@ class AppTheme {
   static const Color inputBackground = Color(0xffB6DBF1);
   static const Color buttonColor = Color(0xfff0d6efd);
   static const Color titleColor = Color(0xff93c47d);
+
   static const String euroTxt = '€';
+
   static const TextStyle titleStyle = TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: titleColor);
   static const TextStyle subtitleStyle = TextStyle(fontSize: 16,color: Colors.white);
   static const TextStyle ratingStyle = TextStyle(fontSize: 15,color: Colors.yellow);
   static const TextStyle priceStyle = TextStyle(color: Colors.red,fontWeight:FontWeight.bold);
 
+  static const String payAnimation = 'assets/payment-complete';
+  static const String checkAnimation = 'assets/check_animation';
+  static const String failAnimation = 'assets/failed-status.json';
+  static const String noDisponibleAnimation = 'assets/proximamente.json';
 
 
   static ThemeData theme = ThemeData.light().copyWith(
