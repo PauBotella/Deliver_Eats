@@ -107,7 +107,9 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () async {
                       var result = await AuthService().singInWithGoogle();
 
+                      FbAuth().firebaseAuth.authStateChanges().listen((user) {
                         Navigator.pushReplacementNamed(context, 'home');
+                      });
 
                     },
                     style: ElevatedButton.styleFrom(

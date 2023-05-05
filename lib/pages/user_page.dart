@@ -36,7 +36,7 @@ class UserPage extends StatelessWidget {
               };
               Map<String, Function()> encargadoOptions = {
                 'Productos': () => _goProducts(context),
-                'Ver registros': () => print('ver')
+                'Ver registros': () => _goOrders(context)
               };
               encargadoOptions.addAll(clientOptions);
               Map<String, Function()> adminOptions =
@@ -47,6 +47,9 @@ class UserPage extends StatelessWidget {
 
               adminOptions['Users'] =
                   () => _goUsers(context);
+
+              adminOptions['Ver registros'] =
+                  () => _goOrders(context);
 
               Map<String, Function()> getOptionsList(UserF user) {
                 if (user.role == 'cliente') {
@@ -112,6 +115,12 @@ class UserPage extends StatelessWidget {
     );
   }
 
+
+}
+
+_goOrders(BuildContext context) {
+
+  Navigator.pushNamed(context, 'orders');
 
 }
 

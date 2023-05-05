@@ -20,7 +20,7 @@ class OrderItem {
     return OrderItem(cantidad: json['cantidad'], order: _getOrder(json['order_ID']), product: _getProduct(json['product_ID']));
   }
 
-  static _getOrder(DocumentReference<Map<String, dynamic>> ref) async {
+  static Future<Orders> _getOrder(DocumentReference<Map<String, dynamic>> ref) async {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await ref.get();
     final Map<String, dynamic> orderData = snapshot.data()!;
     Orders user = Orders.fromJson(orderData,ref.id);
