@@ -31,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
           email: _controllerEmail.text, password: _controllerPassword.text);
     } on FirebaseAuthException catch (ex) {
       diaglogResult(ex.message!, context, AppTheme.failAnimation);
-      setState(() {});
     }
   }
 
@@ -41,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
       diaglogResult(ex.message!, context, AppTheme.failAnimation);
-      setState(() {});
     }
   }
 
@@ -51,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
       diaglogResult(ex.message!, context, AppTheme.failAnimation);
-      setState(() {});
     }
   }
 
@@ -106,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: () async {
                       var result = await AuthService().singInWithGoogle();
-
                       FbAuth().firebaseAuth.authStateChanges().listen((user) {
                         Navigator.pushReplacementNamed(context, 'home');
                       });

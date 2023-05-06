@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
@@ -9,12 +10,23 @@ import 'package:flutter/material.dart';
 
 import '../widgets/dialog.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
 
   @override
+  State<UserPage> createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
+  User currentUser = FbAuth().getUser()!;
+  @override
+  void initState() {
+    _createGoogleUser(currentUser);
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    User currentUser = FbAuth().getUser()!;
+
 
     final userStream = UserProvider.usersRef
         .where('email', isEqualTo: currentUser.email)
@@ -114,8 +126,31 @@ class UserPage extends StatelessWidget {
       ),
     );
   }
+}
 
+_createGoogleUser(User user) async {
+  List<String> signInMethods =
+  await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email!);
 
+  bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
+
+  if (MyPreferences.googleMap == '' && isGoogleUser) {
+    UserProvider.usersRef
+        .where('email', isEqualTo: user.email)
+        .get()
+        .then((QuerySnapshot query) {
+      if (query.docs.isEmpty) {
+        UserProvider.addUser(UserF(
+            email: user.email!,
+            username: user.email!.split('@')[0],
+            uid: '',
+            role: "cliente"));
+        MyPreferences.googleMap += '1';
+      } else {
+        MyPreferences.googleMap += '1';
+      }
+    });
+  }
 }
 
 _goOrders(BuildContext context) {
@@ -128,14 +163,11 @@ _goUsers(BuildContext context) {
 diaglogResult('En construcción', context,AppTheme.noDisponibleAnimation);
 }
 
-_logOut(BuildContext context) {
-  FbAuth().firebaseAuth.signOut();
-
-  FbAuth().firebaseAuth.authStateChanges().listen((user) {
-    MyPreferences.email = '';
-    MyPreferences.password = '';
-    Navigator.pushReplacementNamed(context, 'login');
-  });
+_logOut(BuildContext context) async {
+  MyPreferences.email = '';
+  MyPreferences.password = '';
+  await FbAuth().firebaseAuth.signOut();
+  Navigator.pushReplacementNamed(context, 'login');
 }
 
 _goProducts(BuildContext context) {

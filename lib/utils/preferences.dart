@@ -5,6 +5,7 @@ class MyPreferences {
   static String _email = '';
   static String _password = '';
   static bool _isUserCreated = false;
+  static String _googleMap = '';
 
   static Future init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -18,6 +19,10 @@ class MyPreferences {
     return _prefs.getBool('isUserCreated') ?? _isUserCreated;
   }
 
+  static String get googleMap {
+    return _prefs.getString('googleMap') ?? _googleMap;
+  }
+
   static String get password {
     return _prefs.getString('password') ?? _password;
   }
@@ -25,13 +30,20 @@ class MyPreferences {
     _email = email;
     _prefs.setString('email', email);
   }
-  static set password (String password) {
-    _password = password;
-    _prefs.setString('password', password);
+
+  static set googleMap (String googleMap) {
+    _googleMap = googleMap;
+    _prefs.setString('googleMap', googleMap);
   }
 
-  static set isUserCreated (bool isUserCreated) {
-    _isUserCreated = isUserCreated;
-    _prefs.setBool('password', isUserCreated);
+  static set isUserCreated (bool userCreated){
+    _isUserCreated = userCreated;
+    _prefs.setBool('isUserCreated', userCreated);
   }
+
+  static set password (String password) {
+    _password = password;
+    _prefs.setString('isUserCreated', password);
+  }
+
 }

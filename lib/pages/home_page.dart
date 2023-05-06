@@ -32,39 +32,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    User user = FbAuth().getUser()!;
-    Future<List<String>> signInMethods =
-        FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email!);
-    return FutureBuilder(
-      future: signInMethods,
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          bool isGoogleUser = snapshot.data.contains(GoogleAuthProvider.PROVIDER_ID);
-
-          if (!MyPreferences.isUserCreated && isGoogleUser) {
-            UserProvider.usersRef
-                .where('email', isEqualTo: user.email)
-                .get()
-                .then((QuerySnapshot query) {
-              if (query.docs.isEmpty) {
-                UserProvider.addUser(UserF(
-                    email: user.email!,
-                    username: user.email!.split('@')[0],
-                    uid: '',
-                    role: "cliente"));
-                MyPreferences.isUserCreated = true;
-              } else {
-                MyPreferences.isUserCreated = true;
-              }
-            });
-          }
-        }
-        return Scaffold(
-          bottomNavigationBar: bNav,
-          body: getPageByID(index),
-        );
-        ;
-      },
+    return Scaffold(
+      bottomNavigationBar: bNav,
+      body: getPageByID(index),
     );
   }
 }
