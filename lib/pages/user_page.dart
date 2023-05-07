@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
+import 'package:deliver_eats/services/auth_service_google.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/utils/dialog.dart';
 import 'package:deliver_eats/utils/preferences.dart';
@@ -21,7 +22,6 @@ class _UserPageState extends State<UserPage> {
   User currentUser = FbAuth().getUser()!;
   @override
   void initState() {
-    _createGoogleUser(currentUser);
     super.initState();
   }
   @override
@@ -128,31 +128,6 @@ class _UserPageState extends State<UserPage> {
   }
 }
 
-_createGoogleUser(User user) async {
-  List<String> signInMethods =
-  await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email!);
-
-  bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
-
-  if (MyPreferences.googleMap == '' && isGoogleUser) {
-    UserProvider.usersRef
-        .where('email', isEqualTo: user.email)
-        .get()
-        .then((QuerySnapshot query) {
-      if (query.docs.isEmpty) {
-        UserProvider.addUser(UserF(
-            email: user.email!,
-            username: user.email!.split('@')[0],
-            uid: '',
-            role: "cliente"));
-        MyPreferences.googleMap += '1';
-      } else {
-        MyPreferences.googleMap += '1';
-      }
-    });
-  }
-}
-
 _goOrders(BuildContext context) {
 
   Navigator.pushNamed(context, 'orders');
@@ -164,6 +139,22 @@ diaglogResult('En construcción', context,AppTheme.noDisponibleAnimation);
 }
 
 _logOut(BuildContext context) async {
+
+   UserF user = await UserProvider.getCurrentuser();
+  List<String> signInMethods =
+  await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email);
+
+  bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
+
+  if(isGoogleUser) {
+
+    print('cerrar sesión con google');
+    await AuthService.singOutWithGoogle();
+
+    await Navigator.pushReplacementNamed(context, 'login');
+return;
+  }
+
   MyPreferences.email = '';
   MyPreferences.password = '';
   await FbAuth().firebaseAuth.signOut();

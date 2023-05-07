@@ -37,10 +37,16 @@ class _CartPageState extends State<CartPage> {
   _loadData() async {
     var list = await carts;
     cartList = list;
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carrito'),

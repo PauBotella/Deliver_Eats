@@ -26,6 +26,7 @@ Map<String,WidgetBuilder> getRoutes() {
       'AddUpdateP': (BuildContext context) => AddUpdateProduct(),
       'Pcrud': (BuildContext context) => CrudProductPage(),
       'orders': (BuildContext context) => OrderPage(),
+      'user': (BuildContext context) => UserPage(),
     };
 }
 
