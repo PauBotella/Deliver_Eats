@@ -4,6 +4,7 @@ import 'package:deliver_eats/pages/order_page.dart';
 import 'package:deliver_eats/pages/product_crud_page.dart';
 import 'package:deliver_eats/pages/product_detail.dart';
 import 'package:deliver_eats/pages/product_page.dart';
+import 'package:deliver_eats/pages/user_order.dart';
 import 'package:deliver_eats/pages/user_page.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ Map<String,WidgetBuilder> getRoutes() {
       'AddUpdateP': (BuildContext context) => AddUpdateProduct(),
       'Pcrud': (BuildContext context) => CrudProductPage(),
       'orders': (BuildContext context) => OrderPage(),
+      'user-order': (BuildContext context) => UserOrderPage(),
       'user': (BuildContext context) => UserPage(),
     };
 }

@@ -25,7 +25,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   late Future<List<Cart>> carts;
   List<Cart> cartList = [];
-  bool primeraVez = false;
+  bool primeraVez = true;
 
   @override
   void initState() {
@@ -35,18 +35,13 @@ class _CartPageState extends State<CartPage> {
   }
 
   _loadData() async {
+    print('load');
     var list = await carts;
     cartList = list;
-    setState(() {
-
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-
-    });
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carrito'),
@@ -101,8 +96,9 @@ class _CartPageState extends State<CartPage> {
   }
 
   _productSlider(Future<Product> product, int cantidad) {
-    return StreamBuilder(
-        stream: Stream.fromFuture(product),
+
+    return FutureBuilder(
+        future: product,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshotD) {
           if (snapshotD.hasData) {
             Product product = snapshotD.data!;
@@ -143,7 +139,6 @@ class _CartPageState extends State<CartPage> {
       cartList[index].cantidad++;
       CartProvider().updateCart(cartList[index]);
     });
-    _loadData();
   }
 
   void borrar(int index) {
@@ -156,7 +151,6 @@ class _CartPageState extends State<CartPage> {
         CartProvider().updateCart(cartList[index]);
       }
     });
-    _loadData();
   }
 
   _dialogPedido() async {

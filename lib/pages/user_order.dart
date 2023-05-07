@@ -10,36 +10,30 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-class OrderPage extends StatefulWidget {
-  OrderPage({Key? key}) : super(key: key);
+class UserOrderPage extends StatefulWidget {
+  UserOrderPage({Key? key}) : super(key: key);
 
   @override
-  State<OrderPage> createState() => _OrderPageState();
+  State<UserOrderPage> createState() => _UserOrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _UserOrderPageState extends State<UserOrderPage> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Registros de pedidos'),
           centerTitle: true,
         ),
-        body: StreamBuilder(
-          stream: OrderProvider.getOrders(),
+        body: FutureBuilder(
+          future:  OrderProvider.getOrdersList(),
           builder:
               (BuildContext context, AsyncSnapshot<dynamic> orderSnapshot) {
             if (orderSnapshot.hasData) {
               print(orderSnapshot.data);
 
-              List<Orders> ordersList = orderSnapshot.data!.docs
-                  .map<Orders>((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                document.data() as Map<String, dynamic>;
-                Orders order = Orders.fromJson(data, document.id);
-                return order;
-              }).toList();
+              List<Orders> ordersList = orderSnapshot.data!;
+
 
               return ListView.builder(
                 itemCount: ordersList.length,
@@ -64,8 +58,7 @@ class _OrderPageState extends State<OrderPage> {
 
                           return Column(
                             children: [
-                              Expanded(
-                                child: FutureBuilder(
+                              FutureBuilder(
                                   future: _orderContainer(
                                       itemList, ordersList[index]),
                                   builder: (BuildContext context,
@@ -79,7 +72,6 @@ class _OrderPageState extends State<OrderPage> {
                                     }
                                   },
                                 ),
-                              ),
                             ],
                           );
                         } else {
@@ -102,59 +94,64 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<Widget> _orderContainer(List<OrderItem> itemList, Orders order) async {
+    final size = MediaQuery.of(context).size;
     UserF user = await order.user;
+    UserF currentUser = await UserProvider.getCurrentuser();
 
-    return Padding(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Container(
-            color: AppTheme.widgetColor,
-            width: double.infinity,
-            height: 300,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Pedido de ${user.username}',
-                  style: AppTheme.titleStyle,
-                ),
-                Text(
-                  'En la fecha ${order.date}',
-                  style: AppTheme.subtitleStyle,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 158,
-                  child: ListView(children: await _getProducts(itemList)),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Precio total: ',
-                      style: AppTheme.subtitleStyle,
+    if(user.uid == currentUser.uid) {
+
+      return Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+            children: [
+              Container(
+                color: AppTheme.widgetColor,
+                width: double.infinity,
+                height: size.height-530,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(children: [
+                    SizedBox(
+                      height: 20,
                     ),
-                    Text('${await _getTotalPrice(itemList)}${AppTheme.euroTxt}',
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold)),
-                  ],
+                    Text(
+                      'En la fecha ${order.date}',
+                      style: AppTheme.titleStyle,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 158,
+                      child: ListView(children: await _getProducts(itemList)),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Precio total: ',
+                          style: AppTheme.subtitleStyle,
+                        ),
+                        Text('${await _getTotalPrice(itemList)}${AppTheme.euroTxt}',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ]),
                 ),
-              ]),
-            ),
-          ),
-        ],
-      ),
-    );
+              ),
+            ],
+        ),
+      );
+
+    }
+    return SizedBox(height: 0,width: 0,);
+
+
   }
 }
 

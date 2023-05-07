@@ -44,7 +44,8 @@ class _UserPageState extends State<UserPage> {
             builder: (context,snapshot) {
               Map<String, Function()> clientOptions = {
                 'Cerrar Sesión': () => _logOut(context),
-                'Modificar Datos': () => _modify(context,snapshot.data!)
+                'Modificar Datos': () => _modify(context,snapshot.data!),
+                'Mis Pedidos': () => _goOrderUser(context)
               };
               Map<String, Function()> encargadoOptions = {
                 'Productos': () => _goProducts(context),
@@ -132,6 +133,11 @@ _goOrders(BuildContext context) {
 
   Navigator.pushNamed(context, 'orders');
 
+}
+
+_goOrderUser(BuildContext context) {
+
+  Navigator.pushNamed(context, 'user-order');
 }
 
 _goUsers(BuildContext context) {

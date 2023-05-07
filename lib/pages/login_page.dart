@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerConfirmPassword =
-  TextEditingController();
+      TextEditingController();
 
   Future signInWithEmailAndPassword() async {
     try {
@@ -56,153 +56,154 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*
+        /*
       Gesture detector, lo uso para cuando tienes el focus del teclado en el TextFormField
       Cuando apriete a cualquier sitio de la pantalla que no sea el TextFormField el focus se quitará
       */
         body: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  children: [
-                    SizedBox(height: 40),
-                    const Icon(
-                      Icons.lock,
-                      size: 100,
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(height: 40),
+                const Icon(
+                  Icons.lock,
+                  size: 100,
+                ),
+                const SizedBox(height: 30),
+                CustomInput(
+                  controller: _controllerEmail,
+                  isPasswordInput: false,
+                  inputTxt: 'Email',
+                  icon: Icons.email,
+                ),
+                CustomInput(
+                  controller: _controllerPassword,
+                  isPasswordInput: true,
+                  inputTxt: 'Password',
+                  icon: Icons.password,
+                ),
+                Visibility(
+                    visible: !_isRegisterPage, child: SizedBox(height: 30)),
+                Visibility(
+                  visible: _isRegisterPage,
+                  child: CustomInput(
+                    controller: _controllerConfirmPassword,
+                    isPasswordInput: true,
+                    inputTxt: 'Confirm Password',
+                    icon: Icons.password,
+                  ),
+                ),
+                Visibility(
+                  visible: !_isRegisterPage,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await AuthService().singInWithGoogle();
+                      await _createGoogleUser();
+                      Navigator.pushReplacementNamed(context, 'home');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.inputBackground,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      elevation: 3,
+                      minimumSize: Size(100, 90),
                     ),
-                    const SizedBox(height: 30),
-                    CustomInput(
-                      controller: _controllerEmail,
-                      isPasswordInput: false,
-                      inputTxt: 'Email',
-                      icon: Icons.email,
-                    ),
-                    CustomInput(
-                      controller: _controllerPassword,
-                      isPasswordInput: true,
-                      inputTxt: 'Password',
-                      icon: Icons.password,
-                    ),
-                    Visibility(
-                        visible: !_isRegisterPage, child: SizedBox(height: 30)),
-                    Visibility(
-                      visible: _isRegisterPage,
-                      child: CustomInput(
-                        controller: _controllerConfirmPassword,
-                        isPasswordInput: true,
-                        inputTxt: 'Confirm Password',
-                        icon: Icons.password,
+                    child: Container(
+                      child: const FadeInImage(
+                        placeholder: AssetImage('assets/loading-gif.gif'),
+                        image: AssetImage(
+                          'assets/google-logo.png',
+                        ),
+                        width: 60,
+                        height: 60,
                       ),
                     ),
-                    Visibility(
-                      visible: !_isRegisterPage,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await AuthService().singInWithGoogle();
-                          await _createGoogleUser();
-                          Navigator.pushReplacementNamed(context, 'home');
-
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.inputBackground,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          elevation: 3,
-                          minimumSize: Size(100, 90),
-                        ),
-                        child: Container(
-                          child: const FadeInImage(
-                            placeholder: AssetImage('assets/loading-gif.gif'),
-                            image: AssetImage(
-                              'assets/google-logo.png',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 70, top: 30),
+                  child: Row(
+                    children: [
+                      !_isRegisterPage
+                          ? const Text(
+                              '¿No estás registrado?',
+                              style: TextStyle(color: AppTheme.inputBackground),
+                            )
+                          : const Text(
+                              'O prueba a hacer login',
+                              style: TextStyle(color: AppTheme.inputBackground),
                             ),
-                            width: 60,
-                            height: 60,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 70, top: 30),
-                      child: Row(
-                        children: [
-                          !_isRegisterPage
-                              ? const Text(
-                            '¿No estás registrado?',
-                            style: TextStyle(color: AppTheme.inputBackground),
-                          )
-                              : const Text(
-                            'O prueba a hacer login',
-                            style: TextStyle(color: AppTheme.inputBackground),
-                          ),
-                          !_isRegisterPage
-                              ? TextButton(
+                      !_isRegisterPage
+                          ? TextButton(
                               onPressed: () {
                                 setState(() {
                                   _isRegisterPage = true;
                                 });
                               },
                               child: Text('Registrate aquí'))
-                              : TextButton(
+                          : TextButton(
                               onPressed: () {
                                 setState(() {
                                   _isRegisterPage = false;
                                 });
                               },
                               child: Text('Hacer Login Aquí'))
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        !_isRegisterPage
-                            ? _singInEmail(context)
-                            : _register(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigo,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        elevation: 3,
-                        minimumSize: Size(340, 50),
-                      ),
-                      child: !_isRegisterPage
-                          ? const Text('Iniciar Sesión')
-                          : Text('Registrarse'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    !_isRegisterPage
+                        ? _singInEmail(context)
+                        : _register(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    elevation: 3,
+                    minimumSize: Size(340, 50),
+                  ),
+                  child: !_isRegisterPage
+                      ? const Text('Iniciar Sesión')
+                      : Text('Registrarse'),
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    ));
   }
 
-  void _singInEmail(BuildContext context) async  {
+  void _singInEmail(BuildContext context) async {
     print('login');
     await signInWithEmailAndPassword();
 
-        MyPreferences.email = _controllerEmail.text;
-        MyPreferences.password = _controllerPassword.text;
-        MyPreferences.isUserCreated = true;
+    MyPreferences.email = _controllerEmail.text;
+    MyPreferences.password = _controllerPassword.text;
+    MyPreferences.isUserCreated = true;
 
     Navigator.pushReplacementNamed(context, 'home');
   }
 
-  void _singInEmail2(BuildContext context, String email, String password) async{
+  void _singInEmail2(
+      BuildContext context, String email, String password) async {
     print('crearUsuario');
     await signInWithEmailAndPassword2(email, password);
 
-        MyPreferences.email = email;
-        MyPreferences.password = password;
-        MyPreferences.isUserCreated = true;
-        UserProvider.addUser(UserF(email: email, username: email.split('@')[0], role: "cliente", uid: ''));
+    MyPreferences.email = email;
+    MyPreferences.password = password;
+    MyPreferences.isUserCreated = true;
+    UserProvider.addUser(UserF(
+        email: email, username: email.split('@')[0], role: "cliente", uid: ''));
 
     Navigator.pushReplacementNamed(context, 'home');
   }
@@ -223,33 +224,30 @@ class _LoginPageState extends State<LoginPage> {
       await createUserWithEmailAndPassword(email, password);
       _isRegisterPage = false;
       _singInEmail2(context, email, password);
-
     } on FormatException catch (ex) {
       diaglogResult(ex.message, context, AppTheme.failAnimation);
     }
   }
-
 }
 
 _createGoogleUser() async {
-
   User user = FbAuth().getUser()!;
   List<String> signInMethods =
-  await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email!);
-        bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
+      await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email!);
+  bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
 
-        if (isGoogleUser) {
-          UserProvider.usersRef
-              .where('email', isEqualTo: user.email)
-              .get()
-              .then((QuerySnapshot query) {
-            if (query.docs.isEmpty) {
-              UserProvider.addUser(UserF(
-                  email: user.email!,
-                  username: user.email!.split('@')[0],
-                  uid: '',
-                  role: "cliente"));
-            }
-          });
-        }
+  if (isGoogleUser) {
+    UserProvider.usersRef
+        .where('email', isEqualTo: user.email)
+        .get()
+        .then((QuerySnapshot query) {
+      if (query.docs.isEmpty) {
+        UserProvider.addUser(UserF(
+            email: user.email!,
+            username: user.email!.split('@')[0],
+            uid: '',
+            role: "cliente"));
       }
+    });
+  }
+}
