@@ -8,7 +8,6 @@ import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/utils/formater.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
 
@@ -177,7 +176,7 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
     Product p = await item.product;
     Widget txt = Row(children: [
       Text(
-        p.name + " ",
+        '[${item.cantidad}] ${p.name}',
         style: AppTheme.subtitleStyle,
       ),
       Text(

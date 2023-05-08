@@ -5,7 +5,6 @@ import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/utils/formater.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/product.dart';
 import '../utils/dialog.dart';

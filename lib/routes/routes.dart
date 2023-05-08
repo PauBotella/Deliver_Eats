@@ -30,7 +30,6 @@ Map<String,WidgetBuilder> getRoutes() {
       'orders': (BuildContext context) => OrderPage(),
       'user-order': (BuildContext context) => UserOrderPage(),
       'encargado-order': (BuildContext context) => RestaurantOrderPage(),
-      'user': (BuildContext context) => UserPage(),
     };
 }
 

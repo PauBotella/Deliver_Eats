@@ -6,7 +6,6 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/order_item_provider.dart';
 import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
 import '../utils/formater.dart';
@@ -49,16 +48,16 @@ class _OrderPageState extends State<OrderPage> {
                     // Establece una altura determinada para cada elemento de la lista
                     child: StreamBuilder(
                       stream:
-                      OrderItemProvider.getOrder_item(ordersList[index].id),
+                          OrderItemProvider.getOrder_item(ordersList[index].id),
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> itemSnapshot) {
                         if (itemSnapshot.hasData) {
                           List<OrderItem> itemList = itemSnapshot.data!.docs
                               .map<OrderItem>((DocumentSnapshot document) {
                             Map<String, dynamic> data =
-                            document.data() as Map<String, dynamic>;
+                                document.data() as Map<String, dynamic>;
                             OrderItem restaurant =
-                            OrderItem.fromJson(data, document.id);
+                                OrderItem.fromJson(data, document.id);
                             return restaurant;
                           }).toList();
 
@@ -144,12 +143,14 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                     Text(
                         '${formatNumber(await _getTotalPrice(itemList))}' +
-                        '${AppTheme.euroTxt}',
+                            '${AppTheme.euroTxt}',
                         style: TextStyle(
                             color: Colors.red,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10,)
+                    SizedBox(
+                      height: 10,
+                    )
                   ],
                 ),
               ]),
@@ -187,7 +188,10 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
         '[${item.cantidad}] ${p.name} ',
         style: AppTheme.subtitleStyle,
       ),
-      Text('${formatNumber(p.price * item.cantidad)}' + AppTheme.euroTxt,style: AppTheme.priceStyle,),
+      Text(
+        '${formatNumber(p.price * item.cantidad)}' + AppTheme.euroTxt,
+        style: AppTheme.priceStyle,
+      ),
     ]);
     list.add(txt);
     list.add(Divider(

@@ -9,7 +9,6 @@ import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/utils/formater.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
 
@@ -140,14 +139,16 @@ class _RestaurantOrderPageState extends State<RestaurantOrderPage> {
                     ),
                     Text(
                         '${formatNumber(await _getTotalPrice(itemList))}' +
-                        '${AppTheme.euroTxt}',
+                            '${AppTheme.euroTxt}',
                         style: TextStyle(
                             color: Colors.red,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
                   ],
                 ),
-                SizedBox(height: 10,)
+                SizedBox(
+                  height: 10,
+                )
               ]),
             ),
           ),

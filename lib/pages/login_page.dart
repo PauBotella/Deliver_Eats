@@ -3,6 +3,7 @@ import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/user.dart';
 import '../providers/user_provider.dart';
@@ -63,12 +64,8 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
             child: Column(
               children: [
-                SizedBox(height: 40),
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
-                const SizedBox(height: 30),
+                SizedBox(height: 20),
+                Container(height: 150,child: Lottie.asset('assets/lockAnim.json'),),
                 CustomInput(
                   controller: _controllerEmail,
                   isPasswordInput: false,

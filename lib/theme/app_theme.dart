@@ -22,7 +22,7 @@ class AppTheme {
 
   static ThemeData theme = ThemeData.light().copyWith(
     primaryColor: primary,
-    appBarTheme: AppBarTheme(color: widgetColor, elevation: 0,centerTitle: true),
+    appBarTheme: AppBarTheme(color: widgetColor, elevation: 0,centerTitle: true,),
     scaffoldBackgroundColor: primary,
 
     //Input theme
