@@ -134,7 +134,7 @@ class _OrderPageState extends State<OrderPage> {
                   child: ListView(children: await _getProducts(itemList)),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Row(
                   children: [
@@ -147,6 +147,7 @@ class _OrderPageState extends State<OrderPage> {
                             color: Colors.red,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10,)
                   ],
                 ),
               ]),
@@ -163,7 +164,7 @@ _getTotalPrice(List<OrderItem> itemList) async {
 
   for (OrderItem item in itemList) {
     Product p = await item.product;
-    price += p.price;
+    price += p.price * item.cantidad;
   }
 
   return price;
@@ -181,10 +182,10 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
     Product p = await item.product;
     Widget txt = Row(children: [
       Text(
-        p.name + " ",
+        '[${item.cantidad}] ${p.name} ',
         style: AppTheme.subtitleStyle,
       ),
-      Text(p.price.toString() + AppTheme.euroTxt,style: AppTheme.priceStyle,),
+      Text('${p.price * item.cantidad}' + AppTheme.euroTxt,style: AppTheme.priceStyle,),
     ]);
     list.add(txt);
     list.add(Divider(

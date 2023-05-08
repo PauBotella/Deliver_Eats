@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/services/auth_service.dart';
 import 'package:deliver_eats/services/auth_service_google.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
-import 'package:deliver_eats/utils/dialog.dart';
 import 'package:deliver_eats/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,9 +55,6 @@ class _UserPageState extends State<UserPage> {
               adminOptions.addAll(clientOptions);
               adminOptions['Restaurantes'] =
                   () => _goRestaurants(context);
-
-              adminOptions['Users'] =
-                  () => _goUsers(context);
 
               adminOptions['Ver registros'] =
                   () => _goOrders(context);
@@ -140,10 +135,6 @@ _goOrderUser(BuildContext context) {
   Navigator.pushNamed(context, 'user-order');
 }
 
-_goUsers(BuildContext context) {
-diaglogResult('En construcción', context,AppTheme.noDisponibleAnimation);
-}
-
 _logOut(BuildContext context) async {
 
    UserF user = await UserProvider.getCurrentuser();
@@ -153,8 +144,6 @@ _logOut(BuildContext context) async {
   bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
 
   if(isGoogleUser) {
-
-    print('cerrar sesión con google');
     await AuthService.singOutWithGoogle();
 
     await Navigator.pushReplacementNamed(context, 'login');

@@ -30,17 +30,14 @@ class _UserOrderPageState extends State<UserOrderPage> {
           builder:
               (BuildContext context, AsyncSnapshot<dynamic> orderSnapshot) {
             if (orderSnapshot.hasData) {
-              print(orderSnapshot.data);
 
               List<Orders> ordersList = orderSnapshot.data!;
-
 
               return ListView.builder(
                 itemCount: ordersList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     height: 350,
-                    // Establece una altura determinada para cada elemento de la lista
                     child: StreamBuilder(
                       stream:
                       OrderItemProvider.getOrder_item(ordersList[index].id),
