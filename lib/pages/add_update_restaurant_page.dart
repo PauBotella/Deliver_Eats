@@ -34,7 +34,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
   TextEditingController nameController = TextEditingController();
   TextEditingController addresController = TextEditingController();
   TextEditingController typeController = TextEditingController();
-  bool enabled = true;
+  bool _enabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                   height: 30,
                 ),
                 ElevatedButton(
-                  onPressed: enabled
+                  onPressed: _enabled
                       ? () {
                           try {
                             _addRestaurant(File(_selectedImage!.path));
@@ -164,7 +164,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
 
   _addRestaurant(File image) async {
     try {
-      enabled = false;
+      _enabled = false;
       setState(() {});
       String imageUrl = await uploadImage(image, '/restaurants');
 
@@ -178,8 +178,6 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
       String type = typeController.text;
 
       if (address.isEmpty || name.isEmpty || type.isEmpty || imageUrl.isEmpty) {
-        enabled = true;
-        setState(() {});
         throw Exception('no puedes dejar ningún campo vacio');
       }
 
@@ -201,12 +199,17 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
       if (comprobar.docs.isEmpty) {
         await RestaurantProvider.addRestaurant(restaurant);
         await _createUserFromRestaurant(restaurant);
+
         diaglogResult('Restaurante creado con éxito', context,
             AppTheme.checkAnimation, 'home');
       } else {
         throw Exception('El nombre de ese restaurante ya existe');
       }
     } catch (e) {
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult(
           e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
@@ -241,7 +244,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
 
     await UserProvider.addUser(encargado);
 
-    enabled = true;
+    _enabled = true;
     setState(() {});
   }
 }

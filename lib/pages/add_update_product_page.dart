@@ -27,12 +27,12 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
     super.initState();
   }
 
+  bool _enabled = true;
   ImagePicker imagePicker = ImagePicker();
   XFile? _selectedImage;
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-  bool enabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +71,11 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: _enabled? () async {
                     _selectedImage = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
                     setState(() {});
-                  },
+                  }: null,
                   child: Icon(Icons.photo),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
@@ -147,7 +147,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: enabled
+                  onPressed: _enabled
                       ? () {
                           try {
                             _addProduct(File(_selectedImage!.path));
@@ -156,7 +156,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                                 context, AppTheme.failAnimation, '');
                           }
                         }
-                      : () => print('Desactivado'),
+                      : null,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
                       shape: RoundedRectangleBorder(
@@ -183,9 +183,11 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
   }
 
   _addProduct(File image) async {
+    _enabled = false;
+    setState(() {
+
+    });
     try {
-      enabled = false;
-      setState(() {});
       String imageUrl = await uploadImage(image, '/products');
 
       double randomRating = Random().nextDouble() * 5;
@@ -201,7 +203,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
           name.isEmpty ||
           priceTxt.isEmpty ||
           imageUrl.isEmpty) {
-        enabled = true;
+        _enabled = true;
         setState(() {});
         throw Exception('No puedes dejar ningún campo vacio');
       }
@@ -231,11 +233,17 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
         throw Exception("Ese nombre del producto ya existe");
       }
 
-      enabled = true;
-      setState(() {});
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult('Producto añadido con exito', context,
           AppTheme.checkAnimation, 'home');
     } catch (e) {
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult(e.toString(), context, AppTheme.failAnimation, '');
     }
   }

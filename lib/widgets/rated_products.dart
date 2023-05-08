@@ -27,7 +27,7 @@ class RatedProducts extends StatelessWidget {
               }
 
               for (Product p in snapshot.data) {
-                if (p.rating > 4) rateds.add(p);
+                if (p.rating > 3) rateds.add(p);
               }
             }
 

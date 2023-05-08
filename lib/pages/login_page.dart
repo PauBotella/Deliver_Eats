@@ -20,6 +20,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isRegisterPage = false;
+  bool _enabled = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
@@ -94,13 +95,17 @@ class _LoginPageState extends State<LoginPage> {
                 Visibility(
                   visible: !_isRegisterPage,
                   child: ElevatedButton(
-                    onPressed: () async {
+                    onPressed: _enabled ?() async {
                       try {
+                        _enabled = false;
+                        setState(() {
+
+                        });
                         await AuthService().singInWithGoogle();
                         await _createGoogleUser();
                         Navigator.pushReplacementNamed(context, 'home');
                       } catch (e) {}
-                    },
+                    }: null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.inputBackground,
                       shape: RoundedRectangleBorder(
@@ -153,11 +158,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: _enabled ? () {
                     !_isRegisterPage
                         ? _singInEmail(context)
                         : _register(context);
-                  },
+                  }: null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
                     shape: RoundedRectangleBorder(
@@ -179,6 +184,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void _singInEmail(BuildContext context) async {
     try {
+      _enabled = false;
+      setState(() {
+
+      });
       await signInWithEmailAndPassword();
 
       MyPreferences.email = _controllerEmail.text;
@@ -187,6 +196,10 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacementNamed(context, 'home');
     } catch (e) {
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult(
           e.toString().split("]")[1], context, AppTheme.failAnimation, '');
     }
@@ -208,12 +221,20 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacementNamed(context, 'home');
     } catch (e) {
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult(
           e.toString().split("]")[1], context, AppTheme.failAnimation, '');
     }
   }
 
   void _register(BuildContext context) async {
+    _enabled = false;
+    setState(() {
+
+    });
     print('register');
     String email = _controllerEmail.text;
     String password = _controllerPassword.text;
@@ -230,6 +251,10 @@ class _LoginPageState extends State<LoginPage> {
       _isRegisterPage = false;
       _singInEmail2(context, email, password);
     } on FormatException catch (ex) {
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult(ex.message, context, AppTheme.failAnimation, '');
     }
   }

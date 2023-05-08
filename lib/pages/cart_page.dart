@@ -24,6 +24,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  bool _enabled = true;
   late Future<List<Cart>> carts;
   List<Cart> cartList = [];
   bool primeraVez = true;
@@ -187,7 +188,7 @@ class _CartPageState extends State<CartPage> {
             actions: [
               TextButton(
                   onPressed: () {
-                    _hacerPedido(precio);
+                    _enabled ? _hacerPedido(precio): null;
                   },
                   child: const Text('Hacer pedido',
                       style: TextStyle(color: Colors.blue))),
@@ -206,10 +207,14 @@ class _CartPageState extends State<CartPage> {
 
   _hacerPedido(double precio) async {
     try {
+
       if (cartList.isEmpty) {
         throw Exception('Añade algún producto al carrito');
       }
+      _enabled = false;
+      setState(() {
 
+      });
       UserF user = await UserProvider.getCurrentuser();
       DateTime hoy = DateTime.now();
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
@@ -242,8 +247,15 @@ class _CartPageState extends State<CartPage> {
       setState(() {});
       diaglogResult(
           'Pedido Completado', context, AppTheme.payAnimation, 'home');
+      _enabled = true;
+      setState(() {
+
+      });
     } catch (e) {
-      print(e);
+      _enabled = true;
+      setState(() {
+
+      });
       diaglogResult(
           e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
