@@ -14,6 +14,7 @@ import '../models/orders.dart';
 import '../models/product.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
+import '../utils/formater.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -107,7 +108,7 @@ class _CartPageState extends State<CartPage> {
                 style: AppTheme.subtitleStyle,
               ),
               subtitle: Text(
-                '${NumberFormat("#,##0.00", "es_ES").format(product.price * cantidad)} ${AppTheme.euroTxt}',
+                '${formatNumber(product.price * cantidad)} ${AppTheme.euroTxt}',
                 style: AppTheme.priceStyle,
               ),
               trailing: Wrap(
@@ -179,7 +180,7 @@ class _CartPageState extends State<CartPage> {
                     style: AppTheme.subtitleStyle,
                   ),
                   Text(
-                    ' ${NumberFormat("#,##0.00", "es_ES").format(precio)} ${AppTheme.euroTxt}',
+                    ' ${formatNumber(precio)} ${AppTheme.euroTxt}',
                     style: AppTheme.priceStyle,
                   )
                 ])),
@@ -233,8 +234,11 @@ class _CartPageState extends State<CartPage> {
         await OrderItemProvider.addOrderItem(item);
       }
 
-      cartList.clear();
+      for (var value in cartList) {
+        CartProvider.deleteCart(value.id);
+      };
 
+      cartList.clear();
       setState(() {});
       diaglogResult(
           'Pedido Completado', context, AppTheme.payAnimation, 'home');

@@ -3,6 +3,7 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/cart_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:deliver_eats/utils/formater.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -59,7 +60,7 @@ class ProductDetail extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.star,color: Colors.yellow,),
-                      Text('${NumberFormat("#,#0.0", "es_ES").format(product.rating)}',style: AppTheme.ratingStyle,)
+                      Text('${formatNumber(product.rating)}',style: AppTheme.ratingStyle,)
                     ],
                   ),
                 ),
@@ -68,7 +69,7 @@ class ProductDetail extends StatelessWidget {
                   children: [
                     SizedBox(width: size.width-320,),
                   Text('Por tan solo un total de ',style: AppTheme.subtitleStyle,),
-                    Text(product.price.toString() + " " + AppTheme.euroTxt,style: AppTheme.priceStyle,),
+                    Text('${formatNumber(product.price)}' + " " + AppTheme.euroTxt,style: AppTheme.priceStyle,),
           ]),
               const SizedBox(height: 50,),
               Padding(

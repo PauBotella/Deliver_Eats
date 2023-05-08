@@ -6,7 +6,9 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/order_item_provider.dart';
 import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
+import 'package:deliver_eats/utils/formater.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
 
@@ -130,7 +132,8 @@ class _UserOrderPageState extends State<UserOrderPage> {
                         style: AppTheme.subtitleStyle,
                       ),
                       Text(
-                          '${await _getTotalPrice(itemList)}${AppTheme.euroTxt}',
+                          '${formatNumber(await _getTotalPrice(itemList))}' +
+                          '${AppTheme.euroTxt}',
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 16,
@@ -156,7 +159,7 @@ _getTotalPrice(List<OrderItem> itemList) async {
 
   for (OrderItem item in itemList) {
     Product p = await item.product;
-    price += p.price;
+    price += p.price * item.cantidad;
   }
 
   return price;
@@ -178,7 +181,7 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
         style: AppTheme.subtitleStyle,
       ),
       Text(
-        p.price.toString() + AppTheme.euroTxt,
+        '${formatNumber(p.price * item.cantidad)}' + AppTheme.euroTxt,
         style: AppTheme.priceStyle,
       ),
     ]);

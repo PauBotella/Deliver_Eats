@@ -5,10 +5,11 @@ import 'package:deliver_eats/models/product.dart';
 import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/order_item_provider.dart';
 import 'package:deliver_eats/providers/order_provider.dart';
-import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
+import '../utils/formater.dart';
 
 class OrderPage extends StatefulWidget {
   OrderPage({Key? key}) : super(key: key);
@@ -20,7 +21,6 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Registros de pedidos'),
@@ -142,7 +142,9 @@ class _OrderPageState extends State<OrderPage> {
                       'Precio total: ',
                       style: AppTheme.subtitleStyle,
                     ),
-                    Text('${await _getTotalPrice(itemList)}${AppTheme.euroTxt}',
+                    Text(
+                        '${formatNumber(await _getTotalPrice(itemList))}' +
+                        '${AppTheme.euroTxt}',
                         style: TextStyle(
                             color: Colors.red,
                             fontSize: 16,
@@ -185,7 +187,7 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
         '[${item.cantidad}] ${p.name} ',
         style: AppTheme.subtitleStyle,
       ),
-      Text('${p.price * item.cantidad}' + AppTheme.euroTxt,style: AppTheme.priceStyle,),
+      Text('${formatNumber(p.price * item.cantidad)}' + AppTheme.euroTxt,style: AppTheme.priceStyle,),
     ]);
     list.add(txt);
     list.add(Divider(
