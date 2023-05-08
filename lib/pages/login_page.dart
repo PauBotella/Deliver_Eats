@@ -27,21 +27,15 @@ class _LoginPageState extends State<LoginPage> {
       TextEditingController();
 
   Future signInWithEmailAndPassword() async {
-    try {
       await FbAuth().signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
-    } on FirebaseAuthException catch (ex) {
-      diaglogResult(ex.message!, context, AppTheme.failAnimation);
-    }
+
   }
 
   Future signInWithEmailAndPassword2(String email, String password) async {
-    try {
       await FbAuth()
           .signInWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch (ex) {
-      diaglogResult(ex.message!, context, AppTheme.failAnimation);
-    }
+
   }
 
   Future createUserWithEmailAndPassword(String email, String password) async {
@@ -50,6 +44,9 @@ class _LoginPageState extends State<LoginPage> {
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
       diaglogResult(ex.message!, context, AppTheme.failAnimation);
+      setState(() {
+
+      });
     }
   }
 
@@ -184,28 +181,38 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _singInEmail(BuildContext context) async {
-    print('login');
-    await signInWithEmailAndPassword();
+    try {
 
-    MyPreferences.email = _controllerEmail.text;
-    MyPreferences.password = _controllerPassword.text;
-    MyPreferences.isUserCreated = true;
+      await signInWithEmailAndPassword();
 
-    Navigator.pushReplacementNamed(context, 'home');
+      MyPreferences.email = _controllerEmail.text;
+      MyPreferences.password = _controllerPassword.text;
+      MyPreferences.isUserCreated = true;
+
+      Navigator.pushReplacementNamed(context, 'home');
+    } catch (e) {
+      diaglogResult(e.toString().split("]")[1], context, AppTheme.failAnimation);
+    }
+
   }
 
   void _singInEmail2(
       BuildContext context, String email, String password) async {
-    print('crearUsuario');
-    await signInWithEmailAndPassword2(email, password);
 
-    MyPreferences.email = email;
-    MyPreferences.password = password;
-    MyPreferences.isUserCreated = true;
-    UserProvider.addUser(UserF(
-        email: email, username: email.split('@')[0], role: "cliente", uid: ''));
+    try {
+      await signInWithEmailAndPassword2(email, password);
 
-    Navigator.pushReplacementNamed(context, 'home');
+      MyPreferences.email = email;
+      MyPreferences.password = password;
+      MyPreferences.isUserCreated = true;
+      UserProvider.addUser(UserF(
+          email: email, username: email.split('@')[0], role: "cliente", uid: ''));
+
+      Navigator.pushReplacementNamed(context, 'home');
+    } catch (e){
+      diaglogResult(e.toString().split("]")[1], context, AppTheme.failAnimation);
+    }
+
   }
 
   void _register(BuildContext context) async {
@@ -227,6 +234,14 @@ class _LoginPageState extends State<LoginPage> {
     } on FormatException catch (ex) {
       diaglogResult(ex.message, context, AppTheme.failAnimation);
     }
+  }
+}
+
+extension EmailValidador on String {
+  bool isEmailValid() {
+    return RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(this);;
   }
 }
 
