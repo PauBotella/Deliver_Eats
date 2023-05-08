@@ -15,17 +15,15 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-
   @override
   void initState() {
     super.initState();
 
     timer();
-
   }
 
-  timer(){
-    return Timer(const Duration(seconds: 4),route);
+  timer() {
+    return Timer(const Duration(seconds: 4), route);
   }
 
   route() {
@@ -33,24 +31,20 @@ class _SplashState extends State<Splash> {
       Future signInWithEmailAndPassword() async {
         try {
           await FbAuth().signInWithEmailAndPassword(
-              email: MyPreferences.email,
-              password: MyPreferences.password
-          );
-        } on FirebaseAuthException catch(ex) {}
+              email: MyPreferences.email, password: MyPreferences.password);
+        } on FirebaseAuthException catch (ex) {}
       }
+
       signInWithEmailAndPassword();
       Navigator.pushReplacementNamed(context, 'home');
-
     } else {
       print('No hay');
       Navigator.pushReplacementNamed(context, 'login');
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       //backgroundColor: Color(0xff1C2833),
       body: splashContent(),
@@ -60,14 +54,9 @@ class _SplashState extends State<Splash> {
   Widget splashContent() {
     return Center(
       child: Container(
-
-        child: Lottie.asset(
-          'assets/splash_animation.json',
-          width: 300,
-          height: 300
-        ),
+        child: Lottie.asset('assets/splash_animation.json',
+            width: 300, height: 300),
       ),
     );
   }
-
 }

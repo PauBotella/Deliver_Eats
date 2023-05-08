@@ -25,8 +25,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     bNav = BottomNav(getIndex: (currentIndex) {
       index = currentIndex;
-      setState(() {
-      });
+      setState(() {});
     });
   }
 

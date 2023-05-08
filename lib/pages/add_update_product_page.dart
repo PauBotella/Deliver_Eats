@@ -152,7 +152,8 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                           try {
                             _addProduct(File(_selectedImage!.path));
                           } catch (e) {
-                            diaglogResult('No puedes dejar la imagen vacia', context,AppTheme.failAnimation);
+                            diaglogResult('No puedes dejar la imagen vacia',
+                                context, AppTheme.failAnimation, '');
                           }
                         }
                       : () => print('Desactivado'),
@@ -196,7 +197,10 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
       String name = nameController.text;
       String priceTxt = priceController.text;
 
-      if (description.isEmpty || name.isEmpty || priceTxt.isEmpty || imageUrl.isEmpty) {
+      if (description.isEmpty ||
+          name.isEmpty ||
+          priceTxt.isEmpty ||
+          imageUrl.isEmpty) {
         enabled = true;
         setState(() {});
         throw Exception('No puedes dejar ningún campo vacio');
@@ -229,23 +233,22 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
 
       enabled = true;
       setState(() {});
-      diaglogResult('Producto añadido con exito', context,AppTheme.checkAnimation);
+      diaglogResult('Producto añadido con exito', context,
+          AppTheme.checkAnimation, 'home');
     } catch (e) {
-      diaglogResult(e.toString(), context,AppTheme.failAnimation);
+      diaglogResult(e.toString(), context, AppTheme.failAnimation, '');
     }
-
   }
 
   _addProductToRestaurant(String name) async {
-
-    QuerySnapshot<Object?> comprobar = await ProductProvider.productsRef
-        .where('name', isEqualTo: name)
-        .get();
+    QuerySnapshot<Object?> comprobar =
+        await ProductProvider.productsRef.where('name', isEqualTo: name).get();
 
     Restaurant restaurant =
         ModalRoute.of(context)!.settings.arguments! as Restaurant;
     List<Product> list = await restaurant.products;
-    list.add(Product.fromJson(comprobar.docs[0].data() as Map<String,dynamic>, comprobar.docs[0].id));
+    list.add(Product.fromJson(comprobar.docs[0].data() as Map<String, dynamic>,
+        comprobar.docs[0].id));
     restaurant.products = Future.value(list);
     await RestaurantProvider.updateRestaurant(restaurant);
   }

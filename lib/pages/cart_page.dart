@@ -96,7 +96,6 @@ class _CartPageState extends State<CartPage> {
   }
 
   _productSlider(Future<Product> product, int cantidad) {
-
     return FutureBuilder(
         future: product,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshotD) {
@@ -129,7 +128,9 @@ class _CartPageState extends State<CartPage> {
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         });
   }
@@ -204,8 +205,7 @@ class _CartPageState extends State<CartPage> {
 
   _hacerPedido(double precio) async {
     try {
-
-      if(cartList.isEmpty) {
+      if (cartList.isEmpty) {
         throw Exception('Añade algún producto al carrito');
       }
 
@@ -217,12 +217,12 @@ class _CartPageState extends State<CartPage> {
       Orders order = Orders(
           date: date, user: Future.value(user), id: '', totalPrice: precio);
 
-      DocumentReference<Map<String,dynamic>> orderRef = await OrderProvider.addOrder(order);
+      DocumentReference<Map<String, dynamic>> orderRef =
+          await OrderProvider.addOrder(order);
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await orderRef.get();
       final Map<String, dynamic> orderData = snapshot.data()!;
       Orders firebaseOrder = Orders.fromJson(orderData, orderRef.id);
-
 
       for (Cart c in cartList) {
         OrderItem item = OrderItem(
@@ -233,10 +233,15 @@ class _CartPageState extends State<CartPage> {
         await OrderItemProvider.addOrderItem(item);
       }
 
-      diaglogResult('Pedido Completado', context, AppTheme.payAnimation);
+      cartList.clear();
+
+      setState(() {});
+      diaglogResult(
+          'Pedido Completado', context, AppTheme.payAnimation, 'home');
     } catch (e) {
       print(e);
-      diaglogResult(e.toString().split(":")[1],context,AppTheme.failAnimation);
+      diaglogResult(
+          e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
   }
 }

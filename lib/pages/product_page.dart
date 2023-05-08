@@ -8,22 +8,22 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Restaurant restaurant = ModalRoute.of(context)!.settings.arguments! as Restaurant;
+    Restaurant restaurant =
+        ModalRoute.of(context)!.settings.arguments! as Restaurant;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Productos'),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ProductSwipper(restaurant: restaurant),
-                    RatedProducts(restaurant: restaurant),
-                  ],
-                ),
-              ),
-        )
-    );
+        appBar: AppBar(
+          title: Text('Productos'),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ProductSwipper(restaurant: restaurant),
+                RatedProducts(restaurant: restaurant),
+              ],
+            ),
+          ),
+        ));
   }
 }

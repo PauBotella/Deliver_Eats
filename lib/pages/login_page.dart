@@ -27,15 +27,12 @@ class _LoginPageState extends State<LoginPage> {
       TextEditingController();
 
   Future signInWithEmailAndPassword() async {
-      await FbAuth().signInWithEmailAndPassword(
-          email: _controllerEmail.text, password: _controllerPassword.text);
-
+    await FbAuth().signInWithEmailAndPassword(
+        email: _controllerEmail.text, password: _controllerPassword.text);
   }
 
   Future signInWithEmailAndPassword2(String email, String password) async {
-      await FbAuth()
-          .signInWithEmailAndPassword(email: email, password: password);
-
+    await FbAuth().signInWithEmailAndPassword(email: email, password: password);
   }
 
   Future createUserWithEmailAndPassword(String email, String password) async {
@@ -43,10 +40,8 @@ class _LoginPageState extends State<LoginPage> {
       await FbAuth()
           .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (ex) {
-      diaglogResult(ex.message!, context, AppTheme.failAnimation);
-      setState(() {
-
-      });
+      diaglogResult(ex.message!, context, AppTheme.failAnimation, '');
+      setState(() {});
     }
   }
 
@@ -100,9 +95,11 @@ class _LoginPageState extends State<LoginPage> {
                   visible: !_isRegisterPage,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await AuthService().singInWithGoogle();
-                      await _createGoogleUser();
-                      Navigator.pushReplacementNamed(context, 'home');
+                      try {
+                        await AuthService().singInWithGoogle();
+                        await _createGoogleUser();
+                        Navigator.pushReplacementNamed(context, 'home');
+                      } catch (e) {}
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.inputBackground,
@@ -182,7 +179,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void _singInEmail(BuildContext context) async {
     try {
-
       await signInWithEmailAndPassword();
 
       MyPreferences.email = _controllerEmail.text;
@@ -191,14 +187,13 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacementNamed(context, 'home');
     } catch (e) {
-      diaglogResult(e.toString().split("]")[1], context, AppTheme.failAnimation);
+      diaglogResult(
+          e.toString().split("]")[1], context, AppTheme.failAnimation, '');
     }
-
   }
 
   void _singInEmail2(
       BuildContext context, String email, String password) async {
-
     try {
       await signInWithEmailAndPassword2(email, password);
 
@@ -206,13 +201,16 @@ class _LoginPageState extends State<LoginPage> {
       MyPreferences.password = password;
       MyPreferences.isUserCreated = true;
       UserProvider.addUser(UserF(
-          email: email, username: email.split('@')[0], role: "cliente", uid: ''));
+          email: email,
+          username: email.split('@')[0],
+          role: "cliente",
+          uid: ''));
 
       Navigator.pushReplacementNamed(context, 'home');
-    } catch (e){
-      diaglogResult(e.toString().split("]")[1], context, AppTheme.failAnimation);
+    } catch (e) {
+      diaglogResult(
+          e.toString().split("]")[1], context, AppTheme.failAnimation, '');
     }
-
   }
 
   void _register(BuildContext context) async {
@@ -232,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
       _isRegisterPage = false;
       _singInEmail2(context, email, password);
     } on FormatException catch (ex) {
-      diaglogResult(ex.message, context, AppTheme.failAnimation);
+      diaglogResult(ex.message, context, AppTheme.failAnimation, '');
     }
   }
 }
@@ -240,8 +238,9 @@ class _LoginPageState extends State<LoginPage> {
 extension EmailValidador on String {
   bool isEmailValid() {
     return RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(this);;
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(this);
+    ;
   }
 }
 

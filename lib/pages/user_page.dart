@@ -18,20 +18,18 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   User currentUser = FbAuth().getUser()!;
-  @override
-  void initState() {
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
-
-
     final userStream = UserProvider.usersRef
         .where('email', isEqualTo: currentUser.email)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs
-        .map((doc) => UserF.fromJson(doc.data() as Map<String, dynamic>, doc.id))
-        .firstWhere((user) => true, orElse: () => UserF(email: '', username: '', role: '',uid: '')));
+            .map((doc) =>
+                UserF.fromJson(doc.data() as Map<String, dynamic>, doc.id))
+            .firstWhere((user) => true,
+                orElse: () =>
+                    UserF(email: '', username: '', role: '', uid: '')));
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -39,25 +37,23 @@ class _UserPageState extends State<UserPage> {
         child: Center(
           child: StreamBuilder<UserF>(
             stream: userStream,
-            builder: (context,snapshot) {
+            builder: (context, snapshot) {
               Map<String, Function()> clientOptions = {
                 'Cerrar Sesión': () => _logOut(context),
-                'Modificar Datos': () => _modify(context,snapshot.data!),
+                'Modificar Datos': () => _modify(context, snapshot.data!),
                 'Mis Pedidos': () => _goOrderUser(context)
               };
               Map<String, Function()> encargadoOptions = {
                 'Productos': () => _goProducts(context),
-                'Ver registros': () => _goOrders(context)
+                'Ver registros': () => _goEncargadoOrder(context)
               };
               encargadoOptions.addAll(clientOptions);
               Map<String, Function()> adminOptions =
-              Map<String, Function()>.from(clientOptions);
+                  Map<String, Function()>.from(clientOptions);
               adminOptions.addAll(clientOptions);
-              adminOptions['Restaurantes'] =
-                  () => _goRestaurants(context);
+              adminOptions['Restaurantes'] = () => _goRestaurants(context);
 
-              adminOptions['Ver registros'] =
-                  () => _goOrders(context);
+              adminOptions['Ver registros'] = () => _goOrders(context);
 
               Map<String, Function()> getOptionsList(UserF user) {
                 if (user.role == 'cliente') {
@@ -91,7 +87,10 @@ class _UserPageState extends State<UserPage> {
                       const SizedBox(
                         height: 25,
                       ),
-                      Text(user.username,style: AppTheme.titleStyle,),
+                      Text(
+                        user.username,
+                        style: AppTheme.titleStyle,
+                      ),
                       const SizedBox(
                         height: 30,
                       ),
@@ -103,8 +102,14 @@ class _UserPageState extends State<UserPage> {
                             itemCount: keys.length,
                             itemBuilder: (BuildContext context, int index) {
                               return ListTile(
-                                trailing: Icon(Icons.keyboard_arrow_right,color: Colors.teal,),
-                                title: Text(keys[index],style: AppTheme.subtitleStyle,),
+                                trailing: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.teal,
+                                ),
+                                title: Text(
+                                  keys[index],
+                                  style: AppTheme.subtitleStyle,
+                                ),
                                 onTap: values[index],
                               );
                             },
@@ -125,29 +130,30 @@ class _UserPageState extends State<UserPage> {
 }
 
 _goOrders(BuildContext context) {
-
   Navigator.pushNamed(context, 'orders');
-
 }
 
 _goOrderUser(BuildContext context) {
-
   Navigator.pushNamed(context, 'user-order');
 }
 
-_logOut(BuildContext context) async {
+_goEncargadoOrder(BuildContext context) {
+  print('ir encargado');
+  Navigator.pushNamed(context, 'encargado-order');
+}
 
-   UserF user = await UserProvider.getCurrentuser();
+_logOut(BuildContext context) async {
+  UserF user = await UserProvider.getCurrentuser();
   List<String> signInMethods =
-  await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email);
+      await FbAuth().firebaseAuth.fetchSignInMethodsForEmail(user.email);
 
   bool isGoogleUser = signInMethods.contains(GoogleAuthProvider.PROVIDER_ID);
 
-  if(isGoogleUser) {
+  if (isGoogleUser) {
     await AuthService.singOutWithGoogle();
 
     await Navigator.pushReplacementNamed(context, 'login');
-return;
+    return;
   }
 
   MyPreferences.email = '';
@@ -159,12 +165,17 @@ return;
 _goProducts(BuildContext context) {
   Navigator.pushNamed(context, 'Pcrud');
 }
+
 _goRestaurants(BuildContext context) {
   Navigator.pushNamed(context, 'Rcrud');
 }
 
-_modify(BuildContext context,UserF userF) {
-  showDialog(context: context, builder: (_) {
-    return CustomDialog(user: userF,);
-  });
+_modify(BuildContext context, UserF userF) {
+  showDialog(
+      context: context,
+      builder: (_) {
+        return CustomDialog(
+          user: userF,
+        );
+      });
 }

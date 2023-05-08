@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/product.dart';
+import '../utils/dialog.dart';
 
 class ProductDetail extends StatelessWidget {
   const ProductDetail({Key? key}) : super(key: key);
@@ -120,6 +121,5 @@ _addProductToCart(Future<Product> product,BuildContext context) async {
 
   CartProvider.addCart(cart);
 
-  Navigator.pushReplacementNamed(context, 'home');
-
+  diaglogResult('Producto añadido al carrito con éxito', context,AppTheme.checkAnimation,'');
 }

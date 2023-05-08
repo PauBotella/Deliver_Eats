@@ -58,20 +58,24 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                   height: 10,
                 ),
                 //Mostrar imagen
-                (_selectedImage != null) ? Container(
-                  width: 200,
-                  height: 200,
-                  child: Image.file(
-                    File(_selectedImage!.path), fit: BoxFit.cover,),
-                ) : Container(),
+                (_selectedImage != null)
+                    ? Container(
+                        width: 200,
+                        height: 200,
+                        child: Image.file(
+                          File(_selectedImage!.path),
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(),
 
                 SizedBox(
                   height: 10,
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    _selectedImage =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
+                    _selectedImage = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
                     setState(() {});
                   },
                   child: Icon(Icons.photo),
@@ -123,14 +127,16 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                   height: 30,
                 ),
                 ElevatedButton(
-                  onPressed: enabled ? () {
-                    try {
-                      _addRestaurant(File(_selectedImage!.path));
-                    } catch (e) {
-                      diaglogResult('No puedes dejar la imagen vacia', context, AppTheme.failAnimation);
-                    }
-
-                  }: () => print('Desactivado'),
+                  onPressed: enabled
+                      ? () {
+                          try {
+                            _addRestaurant(File(_selectedImage!.path));
+                          } catch (e) {
+                            diaglogResult('No puedes dejar la imagen vacia',
+                                context, AppTheme.failAnimation, '');
+                          }
+                        }
+                      : () => print('Desactivado'),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
                       shape: RoundedRectangleBorder(
@@ -159,9 +165,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
   _addRestaurant(File image) async {
     try {
       enabled = false;
-      setState(() {
-
-      });
+      setState(() {});
       String imageUrl = await uploadImage(image, '/restaurants');
 
       double randomRating = Random().nextDouble() * 5;
@@ -173,17 +177,16 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
       String name = nameController.text;
       String type = typeController.text;
 
-      if(address.isEmpty || name.isEmpty || type.isEmpty || imageUrl.isEmpty) {
+      if (address.isEmpty || name.isEmpty || type.isEmpty || imageUrl.isEmpty) {
         enabled = true;
-        setState(() {
-
-        });
+        setState(() {});
         throw Exception('no puedes dejar ningún campo vacio');
       }
 
       Future<List<Product>> list = Future.value([]);
 
-      Restaurant restaurant = Restaurant(address: address,
+      Restaurant restaurant = Restaurant(
+          address: address,
           image: imageUrl,
           name: name,
           type: type,
@@ -195,16 +198,17 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
           .where('name', isEqualTo: restaurant.name)
           .get();
 
-      if(comprobar.docs.isEmpty) {
+      if (comprobar.docs.isEmpty) {
         await RestaurantProvider.addRestaurant(restaurant);
         await _createUserFromRestaurant(restaurant);
-        diaglogResult('Restaurante creado con éxito', context,AppTheme.checkAnimation);
+        diaglogResult('Restaurante creado con éxito', context,
+            AppTheme.checkAnimation, 'home');
       } else {
         throw Exception('El nombre de ese restaurante ya existe');
       }
-
     } catch (e) {
-      diaglogResult(e.toString().split(":")[1], context,AppTheme.failAnimation);
+      diaglogResult(
+          e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
   }
 
@@ -212,26 +216,32 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
     QuerySnapshot<Object?> comprobar = await RestaurantProvider.restaurantRef
         .where('name', isEqualTo: restaurant.name)
         .get();
-    
-    String id = comprobar.docs[0].id;
-    String email = restaurant.name.replaceAll(' ', '').toLowerCase() + "@gmail.com";
-    String password = restaurant.name.replaceAll(' ', '');
 
-    if(password.length < 6) {
+    String id = comprobar.docs[0].id;
+    String email =
+        restaurant.name.replaceAll(' ', '').toLowerCase() + "@gmail.com";
+    String password = restaurant.name.replaceAll(' ', '').toLowerCase();
+
+    if (password.length < 6) {
       password += "123456";
     }
 
-    await FbAuth().createUserWithEmailAndPassword(email: email, password: password);
-    
-    UserF encargado = UserF(email: email, username: email.split("@")[0], role: 'encargado', uid: '', restaurant: Future.value(Restaurant.fromJson(comprobar.docs[0].data() as Map<String, dynamic>, id)));
+    print('password');
+
+    await FbAuth()
+        .createUserWithEmailAndPassword(email: email, password: password);
+
+    UserF encargado = UserF(
+        email: email,
+        username: email.split("@")[0],
+        role: 'encargado',
+        uid: '',
+        restaurant: Future.value(Restaurant.fromJson(
+            comprobar.docs[0].data() as Map<String, dynamic>, id)));
 
     await UserProvider.addUser(encargado);
 
     enabled = true;
     setState(() {});
-
-
-
   }
 }
-

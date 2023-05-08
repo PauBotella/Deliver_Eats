@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../widgets/restaurant_card.dart';
 
 class RestaurantPage extends StatelessWidget {
-   RestaurantPage({Key? key}) : super(key: key);
+  RestaurantPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +21,19 @@ class RestaurantPage extends StatelessWidget {
         stream: RestaurantProvider().getRestaurants(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasError) {
-            return const Center(child: Text('Ocurrió un error al obtener los datos.'),);
+            return const Center(
+              child: Text('Ocurrió un error al obtener los datos.'),
+            );
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(),);
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
-          return
-              RestaurantCard(snapshot: snapshot);
-
+          return RestaurantCard(snapshot: snapshot);
         },
-          ),
+      ),
     );
   }
 }

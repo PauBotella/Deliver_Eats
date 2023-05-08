@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 import '../theme/app_theme.dart';
 
 
-diaglogResult(String txt,BuildContext context,String path) {
+diaglogResult(String txt,BuildContext context,String path,String ventana) {
   showDialog(
       context: context,
       builder: (context) {
@@ -26,5 +26,9 @@ diaglogResult(String txt,BuildContext context,String path) {
             ],
           ),
         );
-      });
+      }).then((value) {
+        if(ventana.isNotEmpty) {
+          Navigator.pushReplacementNamed(context, ventana);
+        }
+  });
 }

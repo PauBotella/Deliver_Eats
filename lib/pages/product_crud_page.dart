@@ -21,9 +21,7 @@ class _CrudProductPageState extends State<CrudProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-
-    });
+    setState(() {});
     return Scaffold(
         appBar: AppBar(
           title: const Text('Productos CRUD'),
@@ -32,7 +30,8 @@ class _CrudProductPageState extends State<CrudProductPage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black54,
           onPressed: () {
-            Navigator.pushReplacementNamed(context, 'AddUpdateP',arguments: userRestaurant);
+            Navigator.pushReplacementNamed(context, 'AddUpdateP',
+                arguments: userRestaurant);
           },
           child: const Icon(Icons.add),
         ),
@@ -43,15 +42,21 @@ class _CrudProductPageState extends State<CrudProductPage> {
               return SafeArea(
                 child: Column(
                   children: [
-                    Expanded(child: StreamBuilder(
-                      stream: Stream.fromFuture(_productSlider(snapshot.data.restaurant)),
-                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                        if(snapshot.hasData) {
+                    Expanded(
+                        child: StreamBuilder(
+                      stream: Stream.fromFuture(
+                          _productSlider(snapshot.data.restaurant)),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.hasData) {
                           return snapshot.data;
                         } else {
-                          return Center(child: CircularProgressIndicator(),);
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
-                      },)),
+                      },
+                    )),
                   ],
                 ),
               );
@@ -80,7 +85,8 @@ class _CrudProductPageState extends State<CrudProductPage> {
                 SlidableAction(
                   key: UniqueKey(),
                   autoClose: false,
-                  onPressed: (BuildContext context) => _deleteProducts(products[index],index,products),
+                  onPressed: (BuildContext context) =>
+                      _deleteProducts(products[index], index, products),
                   backgroundColor: Colors.red,
                   icon: Icons.delete_forever,
                   label: 'Borrar',
@@ -105,11 +111,9 @@ class _CrudProductPageState extends State<CrudProductPage> {
     );
   }
 
-  _deleteProducts(Product product,int index,List<Product> algo) {
+  _deleteProducts(Product product, int index, List<Product> algo) {
     algo.removeAt(index);
-    setState(() {
-
-    });
+    setState(() {});
     ProductProvider.deleteProduct(product.id);
   }
 }

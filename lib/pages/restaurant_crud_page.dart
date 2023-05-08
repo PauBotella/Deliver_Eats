@@ -16,7 +16,6 @@ class CrudRestaurantPage extends StatefulWidget {
 }
 
 class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +25,9 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black54,
-        onPressed: () {Navigator.pushNamed(context, 'AddUpdateR');},
+        onPressed: () {
+          Navigator.pushNamed(context, 'AddUpdateR');
+        },
         child: const Icon(Icons.add),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -37,7 +38,7 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
                 .map<Restaurant>((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
-              Restaurant restaurant = Restaurant.fromJson(data,document.id);
+              Restaurant restaurant = Restaurant.fromJson(data, document.id);
               return restaurant;
             }).toList();
 
@@ -55,7 +56,8 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
                                 SlidableAction(
                                   key: UniqueKey(),
                                   autoClose: false,
-                                  onPressed: (BuildContext context) => _deleteRestaurant(restaurants[index]),
+                                  onPressed: (BuildContext context) =>
+                                      _deleteRestaurant(restaurants[index]),
                                   backgroundColor: Colors.red,
                                   icon: Icons.delete_forever,
                                   label: 'Borrar',
@@ -81,6 +83,7 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
       ),
     );
   }
+
   _productSlider(Restaurant restaurant) {
     return ListTile(
         onTap: () => print('update'),
@@ -98,7 +101,7 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
         ));
   }
 
-  _deleteRestaurant(Restaurant restaurant) async{
-     await RestaurantProvider.deleteRestaurant(restaurant.id);
+  _deleteRestaurant(Restaurant restaurant) async {
+    await RestaurantProvider.deleteRestaurant(restaurant.id);
   }
 }
