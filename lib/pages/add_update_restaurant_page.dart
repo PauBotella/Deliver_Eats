@@ -73,11 +73,11 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: _enabled ? () async {
                     _selectedImage = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
                     setState(() {});
-                  },
+                  } : null,
                   child: Icon(Icons.photo),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
@@ -199,7 +199,10 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
       if (comprobar.docs.isEmpty) {
         await RestaurantProvider.addRestaurant(restaurant);
         await _createUserFromRestaurant(restaurant);
+        _enabled = true;
+        setState(() {
 
+        });
         diaglogResult('Restaurante creado con éxito', context,
             AppTheme.checkAnimation, 'home');
       } else {

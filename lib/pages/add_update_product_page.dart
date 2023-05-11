@@ -246,7 +246,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
         await ProductProvider.addProduct(newProduct);
         if(upate) {
           newProduct.id = product.id;
-          print("update");
+          newProduct.rating = product.rating;
           await _updateProduct(newProduct);
         } else {
           await _addProductToRestaurant(newProduct.name,restaurant);
