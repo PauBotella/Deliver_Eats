@@ -12,9 +12,11 @@ import 'package:deliver_eats/services/upload_image.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/widgets/custom_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../utils/dialog.dart';
+import '../utils/utils.dart';
 
 class AddUpdateRestaurant extends StatefulWidget {
   const AddUpdateRestaurant({Key? key}) : super(key: key);
@@ -24,11 +26,6 @@ class AddUpdateRestaurant extends StatefulWidget {
 }
 
 class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   ImagePicker imagePicker = ImagePicker();
   XFile? _selectedImage;
   TextEditingController nameController = TextEditingController();
@@ -38,9 +35,17 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments! as List<dynamic>;
+
+    Restaurant? restaurant = arguments[0] as Restaurant?;
+    bool update = arguments[1] as bool;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Añadir Restaurante'),
+        title: update
+            ? Text('Actualizar Restaurante')
+            : Text('Añadir Restaurante'),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -67,17 +72,28 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                           fit: BoxFit.cover,
                         ),
                       )
-                    : Container(),
+                    : update
+                        ? Container(
+                            width: 200,
+                            height: 200,
+                            child: Image.network(
+                              restaurant!.image,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(),
 
                 SizedBox(
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: _enabled ? () async {
-                    _selectedImage = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
-                    setState(() {});
-                  } : null,
+                  onPressed: _enabled
+                      ? () async {
+                          _selectedImage = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                          setState(() {});
+                        }
+                      : null,
                   child: Icon(Icons.photo),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
@@ -96,7 +112,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: 'Ej: pekin muralla',
+                    inputTxt: update ? restaurant!.name : 'Ej: pekin muralla',
                     icon: Icons.account_circle_outlined,
                     controller: nameController),
                 SizedBox(
@@ -108,7 +124,8 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: 'Ej: calle chabolas 12',
+                    inputTxt:
+                        update ? restaurant!.address : 'Ej: calle chabolas 12',
                     icon: Icons.abc,
                     controller: addresController),
                 SizedBox(
@@ -120,7 +137,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: 'Ej: china',
+                    inputTxt: update ? restaurant!.type : 'Ej: china',
                     icon: Icons.abc,
                     controller: typeController),
                 SizedBox(
@@ -128,15 +145,21 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                 ),
                 ElevatedButton(
                   onPressed: _enabled
-                      ? () {
+                      ? () async {
                           try {
-                            _addRestaurant(File(_selectedImage!.path));
+                            if (update && _selectedImage == null) {
+                              _selectedImage =
+                                  await getImageByURL(restaurant!.image);
+                              setState(() {});
+                            }
+                            _addRestaurant(
+                                File(_selectedImage!.path), update, restaurant);
                           } catch (e) {
                             diaglogResult('No puedes dejar la imagen vacia',
                                 context, AppTheme.failAnimation, '');
                           }
                         }
-                      : () => print('Desactivado'),
+                      : null,
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
                       shape: RoundedRectangleBorder(
@@ -147,7 +170,12 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 55),
                     child: Row(
-                      children: [Icon(Icons.add), Text('Añadir restaurante')],
+                      children: [
+                        update ? Icon(Icons.update) : Icon(Icons.add),
+                        update
+                            ? Text(' Actualizar Restaurante')
+                            : Text(' Añadir restaurante')
+                      ],
                     ),
                   ),
                 ),
@@ -162,7 +190,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
     );
   }
 
-  _addRestaurant(File image) async {
+  _addRestaurant(File image, bool update, Restaurant? restaurant) async {
     try {
       _enabled = false;
       setState(() {});
@@ -178,12 +206,18 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
       String type = typeController.text;
 
       if (address.isEmpty || name.isEmpty || type.isEmpty || imageUrl.isEmpty) {
-        throw Exception('no puedes dejar ningún campo vacio');
+        if (update) {
+          if (address.isEmpty) address = restaurant!.address;
+          if (name.isEmpty) name = restaurant!.name;
+          if (type.isEmpty) type = restaurant!.type;
+        } else {
+          throw Exception('no puedes dejar ningún campo vacio');
+        }
       }
 
       Future<List<Product>> list = Future.value([]);
 
-      Restaurant restaurant = Restaurant(
+      Restaurant newRestaurant = Restaurant(
           address: address,
           image: imageUrl,
           name: name,
@@ -193,29 +227,41 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
           rating: randomRating);
 
       QuerySnapshot<Object?> comprobar = await RestaurantProvider.restaurantRef
-          .where('name', isEqualTo: restaurant.name)
+          .where('name', isEqualTo: newRestaurant.name)
           .get();
 
-      if (comprobar.docs.isEmpty) {
-        await RestaurantProvider.addRestaurant(restaurant);
-        await _createUserFromRestaurant(restaurant);
-        _enabled = true;
-        setState(() {
+      if (comprobar.docs.isEmpty || update) {
+        if (update) {
+          newRestaurant.products = restaurant!.products;
+          newRestaurant.id = restaurant.id;
+          await _updateRestaurant(newRestaurant);
+        } else {
+          await RestaurantProvider.addRestaurant(newRestaurant);
+          await _createUserFromRestaurant(newRestaurant);
+        }
 
-        });
-        diaglogResult('Restaurante creado con éxito', context,
-            AppTheme.checkAnimation, 'home');
+        _enabled = true;
+        setState(() {});
+        diaglogResult(
+            update
+                ? 'Restaurante actualizado con éxito'
+                : 'Restaurante creado con éxito',
+            context,
+            AppTheme.checkAnimation,
+            'home');
       } else {
         throw Exception('El nombre de ese restaurante ya existe');
       }
     } catch (e) {
       _enabled = true;
-      setState(() {
-
-      });
+      setState(() {});
       diaglogResult(
           e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
+  }
+
+  _updateRestaurant(Restaurant restaurant) async {
+    await RestaurantProvider.updateRestaurant(restaurant);
   }
 
   _createUserFromRestaurant(Restaurant restaurant) async {

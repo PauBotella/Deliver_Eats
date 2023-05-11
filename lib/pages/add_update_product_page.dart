@@ -23,12 +23,6 @@ class AddUpdateProduct extends StatefulWidget {
 }
 
 class _AddUpdateProductState extends State<AddUpdateProduct> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-
   bool _enabled = true;
   ImagePicker imagePicker = ImagePicker();
   XFile? _selectedImage;
@@ -38,8 +32,8 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
 
   @override
   Widget build(BuildContext context) {
-
-    List<dynamic> arguments = ModalRoute.of(context)!.settings.arguments! as List<dynamic>;
+    List<dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments! as List<dynamic>;
 
     Restaurant restaurant = arguments[0] as Restaurant;
     Product? product = arguments[1] as Product?;
@@ -47,7 +41,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
 
     return Scaffold(
       appBar: AppBar(
-        title: update ? Text('Actualizar Producto'):Text('Añadir Producto'),
+        title: update ? Text('Actualizar Producto') : Text('Añadir Producto'),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -74,24 +68,28 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                           fit: BoxFit.cover,
                         ),
                       )
-                    : update ? Container(
-                  width: 200,
-                  height: 200,
-                  child: Image.network(
-                    product!.image,
-                    fit: BoxFit.cover,
-                  ),
-                ): Container(),
+                    : update
+                        ? Container(
+                            width: 200,
+                            height: 200,
+                            child: Image.network(
+                              product!.image,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(),
 
                 SizedBox(
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: _enabled? () async {
-                    _selectedImage = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
-                    setState(() {});
-                  }: null,
+                  onPressed: _enabled
+                      ? () async {
+                          _selectedImage = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+                          setState(() {});
+                        }
+                      : null,
                   child: Icon(Icons.photo),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
@@ -110,7 +108,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                 ),
                 CustomInput(
                     isPasswordInput: false,
-                    inputTxt: update ? product!.name:'Ej: Pollo al limón',
+                    inputTxt: update ? product!.name : 'Ej: Pollo al limón',
                     icon: Icons.account_circle_outlined,
                     controller: nameController),
                 SizedBox(
@@ -129,7 +127,8 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       filled: true,
-                      hintText: update ? product!.description:'Un plato muy rico',
+                      hintText:
+                          update ? product!.description : 'Un plato muy rico',
                       hintStyle: TextStyle(
                         color: Colors.indigo,
                         fontWeight: FontWeight.bold,
@@ -156,7 +155,9 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                             color: AppTheme.widgetColor,
                           ),
                         ),
-                        label: update? Text(formatNumber(product!.price)): Text('Ej 15.80')),
+                        label: update
+                            ? Text(formatNumber(product!.price))
+                            : Text('Ej 15.80')),
                   ),
                 ),
                 SizedBox(
@@ -164,9 +165,16 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                 ),
                 ElevatedButton(
                   onPressed: _enabled
-                      ? () {
+                      ? () async {
                           try {
-                            _addProduct(File(_selectedImage!.path),restaurant,update,product!);
+                            if (update && _selectedImage == null) {
+                              _selectedImage =
+                                  await getImageByURL(restaurant.image);
+                              setState(() {});
+                            }
+
+                            _addProduct(File(_selectedImage!.path), restaurant,
+                                update, product);
                           } catch (e) {
                             diaglogResult('No puedes dejar la imagen vacia',
                                 context, AppTheme.failAnimation, '');
@@ -183,7 +191,12 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 55),
                     child: Row(
-                      children: [Icon(Icons.add), update ? Text("Actualizar Producto"):Text('Añadir producto')],
+                      children: [
+                        update ? Icon(Icons.update) : Icon(Icons.add),
+                        update
+                            ? Text(" Actualizar Producto")
+                            : Text(' Añadir producto')
+                      ],
                     ),
                   ),
                 ),
@@ -198,11 +211,10 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
     );
   }
 
-  _addProduct(File image,Restaurant restaurant,bool upate,Product product) async {
+  _addProduct(
+      File image, Restaurant restaurant, bool upate, Product? product) async {
     _enabled = false;
-    setState(() {
-
-    });
+    setState(() {});
     try {
       String imageUrl = await uploadImage(image, '/products');
 
@@ -219,9 +231,13 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
           name.isEmpty ||
           priceTxt.isEmpty ||
           imageUrl.isEmpty) {
-        _enabled = true;
-        setState(() {});
-        throw Exception('No puedes dejar ningún campo vacio');
+        if (upate) {
+          if (name.isEmpty) name = product!.name;
+          if (description.isEmpty) description = product!.description;
+          if (priceTxt.isEmpty) priceTxt = product!.price.toString();
+        } else {
+          throw Exception('No puedes dejar ningún campo vacio');
+        }
       }
       double price = 0.0;
       try {
@@ -243,34 +259,36 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
           .get();
 
       if (comprobar.docs.isEmpty || upate) {
-        await ProductProvider.addProduct(newProduct);
-        if(upate) {
-          newProduct.id = product.id;
+        if (upate) {
+          newProduct.id = product!.id;
           newProduct.rating = product.rating;
           await _updateProduct(newProduct);
         } else {
-          await _addProductToRestaurant(newProduct.name,restaurant);
+          await ProductProvider.addProduct(newProduct);
+          await _addProductToRestaurant(newProduct.name, restaurant);
         }
       } else {
         throw Exception("Ese nombre del producto ya existe");
       }
 
       _enabled = true;
-      setState(() {
-
-      });
-      diaglogResult(upate? 'Producto Actualizado con exito':'Producto añadido con exito', context,
-          AppTheme.checkAnimation, 'home');
+      setState(() {});
+      diaglogResult(
+          upate
+              ? 'Producto Actualizado con exito'
+              : 'Producto añadido con exito',
+          context,
+          AppTheme.checkAnimation,
+          'home');
     } catch (e) {
       _enabled = true;
-      setState(() {
-
-      });
-      diaglogResult(e.toString(), context, AppTheme.failAnimation, '');
+      setState(() {});
+      diaglogResult(
+          e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
   }
 
-  _addProductToRestaurant(String name,Restaurant restaurant) async {
+  _addProductToRestaurant(String name, Restaurant restaurant) async {
     QuerySnapshot<Object?> comprobar =
         await ProductProvider.productsRef.where('name', isEqualTo: name).get();
 
@@ -282,8 +300,6 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
   }
 
   _updateProduct(Product product) async {
-
     await ProductProvider.updateProduct(product);
   }
-
 }

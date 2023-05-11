@@ -24,7 +24,7 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black54,
         onPressed: () {
-          Navigator.pushNamed(context, 'AddUpdateR');
+          Navigator.pushNamed(context, 'AddUpdateR', arguments: [null, false]);
         },
         child: const Icon(Icons.add),
       ),
@@ -84,7 +84,8 @@ class _CrudRestaurantPageState extends State<CrudRestaurantPage> {
 
   _productSlider(Restaurant restaurant) {
     return ListTile(
-        onTap: () => print('update'),
+        onTap: () => Navigator.pushNamed(context, 'AddUpdateR',
+            arguments: [restaurant, true]),
         title: Text(
           restaurant.name,
           style: AppTheme.titleStyle,
