@@ -16,7 +16,7 @@ import '../models/orders.dart';
 import '../models/product.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
-import '../utils/formater.dart';
+import '../utils/utils.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);

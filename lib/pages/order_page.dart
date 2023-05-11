@@ -8,7 +8,7 @@ import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
-import '../utils/formater.dart';
+import '../utils/utils.dart';
 
 class OrderPage extends StatefulWidget {
   OrderPage({Key? key}) : super(key: key);

@@ -8,7 +8,7 @@ class RestaurantProvider {
     return stream;
   }
 
-  static updateRestaurant(Restaurant restaurant) async{
+  static updateRestaurant(Restaurant restaurant) async {
 
     Map<String,dynamic> cartMap = await restaurant.toMap();
 

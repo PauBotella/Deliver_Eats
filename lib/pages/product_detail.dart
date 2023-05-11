@@ -3,7 +3,7 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/cart_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
-import 'package:deliver_eats/utils/formater.dart';
+import 'package:deliver_eats/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../models/product.dart';

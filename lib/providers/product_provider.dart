@@ -16,6 +16,19 @@ class ProductProvider {
     return await Future.value(products);
   }
 
+  static updateProduct(Product product) async {
+
+    Map<String,dynamic> cartMap = await product.toMap();
+
+    try {
+      await productsRef.doc(product.id).update(cartMap);
+      print('Producto actualizado');
+    } catch (e) {
+      print('Error actualizando Producto $e');
+    }
+
+  }
+
   static void deleteProduct(String id) async {
     try {
       await productsRef.doc(id).delete();

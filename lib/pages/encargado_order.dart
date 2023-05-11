@@ -7,7 +7,7 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/order_item_provider.dart';
 import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
-import 'package:deliver_eats/utils/formater.dart';
+import 'package:deliver_eats/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
@@ -24,7 +24,7 @@ class _RestaurantOrderPageState extends State<RestaurantOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Registros de pedidos'),
+          title: const Text('Pedidos Restaurantes'),
           centerTitle: true,
         ),
         body: FutureBuilder(
@@ -106,7 +106,7 @@ class _RestaurantOrderPageState extends State<RestaurantOrderPage> {
           Container(
             color: AppTheme.widgetColor,
             width: double.infinity,
-            height: size.height - 520,
+            height: size.height - 490,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(children: [

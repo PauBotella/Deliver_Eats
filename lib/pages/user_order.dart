@@ -6,7 +6,7 @@ import 'package:deliver_eats/models/user.dart';
 import 'package:deliver_eats/providers/order_item_provider.dart';
 import 'package:deliver_eats/providers/order_provider.dart';
 import 'package:deliver_eats/providers/user_provider.dart';
-import 'package:deliver_eats/utils/formater.dart';
+import 'package:deliver_eats/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
@@ -103,7 +103,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
             Container(
               color: AppTheme.widgetColor,
               width: double.infinity,
-              height: size.height - 530,
+              height: size.height - 510,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(children: [
@@ -139,6 +139,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
                               fontWeight: FontWeight.bold)),
                     ],
                   ),
+                  SizedBox(height: 20,)
                 ]),
               ),
             ),

@@ -31,7 +31,7 @@ class _CrudProductPageState extends State<CrudProductPage> {
           backgroundColor: Colors.black54,
           onPressed: () {
             Navigator.pushReplacementNamed(context, 'AddUpdateP',
-                arguments: userRestaurant);
+                arguments: [userRestaurant,null,false]);
           },
           child: const Icon(Icons.add),
         ),
@@ -94,7 +94,8 @@ class _CrudProductPageState extends State<CrudProductPage> {
               ],
             ),
             child: ListTile(
-                onTap: () => print('update'),
+                onTap: () => Navigator.pushReplacementNamed(context, 'AddUpdateP',
+                    arguments: [userRestaurant,products[index],true],),
                 title: Text(
                   products[index].name,
                   style: AppTheme.titleStyle,
