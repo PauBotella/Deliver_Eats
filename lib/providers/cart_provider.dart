@@ -11,7 +11,7 @@ class CartProvider {
     Future<UserF> user = UserProvider.getCurrentuser();
     List<Cart> carts = [];
     Future<List<Cart>> list =user.then((value) {
-      DocumentReference doc = UserProvider.usersRef.doc(value.uid);
+      DocumentReference doc = UserProvider.usersRef.doc(value.id);
       cartRef.where('user_ID', isEqualTo: doc).get().then(
         (QuerySnapshot query) {
           for (var element in query.docs) {

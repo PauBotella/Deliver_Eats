@@ -8,8 +8,7 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Restaurant restaurant =
-        ModalRoute.of(context)!.settings.arguments! as Restaurant;
+    Restaurant restaurant = ModalRoute.of(context)!.settings.arguments! as Restaurant;
     return Scaffold(
         appBar: AppBar(
           title: Text('Productos'),

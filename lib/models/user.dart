@@ -5,10 +5,10 @@ import 'package:deliver_eats/providers/restaurant_provider.dart';
 
 class UserF {
   String email, username;
-  String role,uid;
+  String role,id;
   Future<Restaurant>? restaurant;
 
-  UserF({required this.email, required this.username, required this.role,required this.uid,this.restaurant});
+  UserF({required this.email, required this.username, required this.role,required this.id,this.restaurant});
 
   Future<Map<String, dynamic>> toMap() async{
 
@@ -38,14 +38,14 @@ class UserF {
           username: json['username'],
           role: json['role_ID'],
           restaurant: _getProduct(json['restaurant']),
-          uid: id
+          id: id
       );
     } catch (e) {
       return UserF(
           email: json['email'],
           username: json['username'],
           role: json['role_ID'],
-          uid: id
+          id: id
       );
     }
 

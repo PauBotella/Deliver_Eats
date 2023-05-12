@@ -254,11 +254,11 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
           id: '',
           rating: randomRating);
 
-      QuerySnapshot<Object?> comprobar = await ProductProvider.productsRef
+      QuerySnapshot<Object?> queryResult = await ProductProvider.productsRef
           .where('name', isEqualTo: newProduct.name)
           .get();
 
-      if (comprobar.docs.isEmpty || upate) {
+      if (queryResult.docs.isEmpty || upate) {
         if (upate) {
           newProduct.id = product!.id;
           newProduct.rating = product.rating;
@@ -289,12 +289,12 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
   }
 
   _addProductToRestaurant(String name, Restaurant restaurant) async {
-    QuerySnapshot<Object?> comprobar =
+    QuerySnapshot<Object?> queryResult =
         await ProductProvider.productsRef.where('name', isEqualTo: name).get();
 
     List<Product> list = await restaurant.products;
-    list.add(Product.fromJson(comprobar.docs[0].data() as Map<String, dynamic>,
-        comprobar.docs[0].id));
+    list.add(Product.fromJson(queryResult.docs[0].data() as Map<String, dynamic>,
+        queryResult.docs[0].id));
     restaurant.products = Future.value(list);
     await RestaurantProvider.updateRestaurant(restaurant);
   }

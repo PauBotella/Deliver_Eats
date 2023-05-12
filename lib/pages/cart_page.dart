@@ -43,7 +43,6 @@ class _CartPageState extends State<CartPage> {
   }
 
   _loadData() async {
-    print('load');
     var list = await carts;
     cartList = list;
     setState(() {});
@@ -79,7 +78,7 @@ class _CartPageState extends State<CartPage> {
                         SlidableAction(
                           key: UniqueKey(),
                           autoClose: false,
-                          onPressed: (BuildContext context) => suma1(index),
+                          onPressed: (BuildContext context) => add1(index),
                           backgroundColor: Colors.indigo,
                           icon: Icons.add,
                           label: 'Añadir',
@@ -87,7 +86,7 @@ class _CartPageState extends State<CartPage> {
                         SlidableAction(
                           key: UniqueKey(),
                           autoClose: false,
-                          onPressed: (BuildContext context) => borrar(index),
+                          onPressed: (BuildContext context) => delete(index),
                           backgroundColor: Colors.red,
                           icon: Icons.delete_forever,
                           label: 'Borrar',
@@ -96,7 +95,7 @@ class _CartPageState extends State<CartPage> {
                     ),
                     child: _productSlider(
                       cartList[index].product,
-                      cartList[index].cantidad,
+                      cartList[index].quantity,
                     ),
                   );
                 },
@@ -108,7 +107,7 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  _productSlider(Future<Product> product, int cantidad) {
+  _productSlider(Future<Product> product, int quantity) {
     return FutureBuilder(
         future: product,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshotD) {
@@ -120,13 +119,13 @@ class _CartPageState extends State<CartPage> {
                 style: AppTheme.subtitleStyle,
               ),
               subtitle: Text(
-                '${formatNumber(product.price * cantidad)} ${AppTheme.euroTxt}',
+                '${formatNumber(product.price * quantity)} ${AppTheme.euroTxt}',
                 style: AppTheme.priceStyle,
               ),
               trailing: Wrap(
                 children: [
                   Text(
-                    cantidad.toString(),
+                    quantity.toString(),
                     style:
                         TextStyle(fontSize: 17, color: Colors.lightBlueAccent),
                   ),
@@ -148,36 +147,36 @@ class _CartPageState extends State<CartPage> {
         });
   }
 
-  void suma1(int index) {
+  void add1(int index) {
     setState(() {
-      cartList[index].cantidad++;
+      cartList[index].quantity++;
       CartProvider().updateCart(cartList[index]);
     });
   }
 
-  void borrar(int index) {
+  void delete(int index) {
     setState(() {
-      if (cartList[index].cantidad <= 1) {
+      if (cartList[index].quantity <= 1) {
         CartProvider.deleteCart(cartList[index].id);
         cartList.removeAt(index);
       } else {
-        cartList[index].cantidad--;
+        cartList[index].quantity--;
         CartProvider().updateCart(cartList[index]);
       }
     });
   }
 
   _totalPrice() async {
-    double precio = 0.0;
+    double price = 0.0;
     for (Cart cart in cartList) {
       Product product = await cart.product;
-      precio += product.price * cart.cantidad;
+      price += product.price * cart.quantity;
     }
-    return precio;
+    return price;
   }
 
   _dialogPedido() async {
-    double precio = await _totalPrice();
+    double price = await _totalPrice();
 
     showDialog(
         context: context,
@@ -197,7 +196,7 @@ class _CartPageState extends State<CartPage> {
                     style: AppTheme.subtitleStyle,
                   ),
                   Text(
-                    ' ${formatNumber(precio)} ${AppTheme.euroTxt}',
+                    ' ${formatNumber(price)} ${AppTheme.euroTxt}',
                     style: AppTheme.priceStyle,
                   )
                 ])),
@@ -205,9 +204,8 @@ class _CartPageState extends State<CartPage> {
               TextButton(
                   onPressed: () {
                     try {
-                      _enabled ? makePayment() : null;
+                      _enabled ? _makePayment() : null;
                     } catch (e) {}
-
                   },
                   child: const Text('Hacer pedido',
                       style: TextStyle(color: Colors.blue))),
@@ -224,7 +222,7 @@ class _CartPageState extends State<CartPage> {
         });
   }
 
-  _hacerPedido(double precio) async {
+  _placeOrder(double price) async {
     _enabled = false;
     setState(() {});
     UserF user = await UserProvider.getCurrentuser();
@@ -233,7 +231,7 @@ class _CartPageState extends State<CartPage> {
     String date = dateFormat.format(hoy);
 
     Orders order = Orders(
-        date: date, user: Future.value(user), id: '', totalPrice: precio);
+        date: date, user: Future.value(user), id: '', totalPrice: price);
 
     DocumentReference<Map<String, dynamic>> orderRef =
         await OrderProvider.addOrder(order);
@@ -244,7 +242,7 @@ class _CartPageState extends State<CartPage> {
 
     for (Cart c in cartList) {
       OrderItem item = OrderItem(
-          cantidad: c.cantidad,
+          quantity: c.quantity,
           order: Future.value(firebaseOrder),
           product: c.product);
 
@@ -263,26 +261,23 @@ class _CartPageState extends State<CartPage> {
     setState(() {});
   }
 
-  Future<void> makePayment() async {
+  _makePayment() async {
     totalPrice = await _totalPrice();
 
     try {
-
       if (cartList.isEmpty) {
         throw Exception('Añade algún producto al carrito');
       }
 
-      paymentIntent = await createPaymentIntent('EUR', totalPrice);
+      paymentIntent = await _createPaymentIntent(totalPrice);
       //Payment Sheet
       await Stripe.instance
           .initPaymentSheet(
               paymentSheetParameters: SetupPaymentSheetParameters(
                   paymentIntentClientSecret: paymentIntent!['client_secret'],
                   style: ThemeMode.dark,
-                  merchantDisplayName: 'Pau'))
-          .then((value) {});
-
-      displayPaymentSheet();
+                  merchantDisplayName: 'Pau'));
+      _displayPaymentSheet();
     } catch (e) {
       _enabled = true;
       setState(() {});
@@ -291,22 +286,21 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  displayPaymentSheet() async {
-
+  _displayPaymentSheet() async {
     await Stripe.instance.presentPaymentSheet().then((value) async {
-      await _hacerPedido(totalPrice);
+      await _placeOrder(totalPrice);
       Navigator.pushReplacementNamed(context, 'home');
       paymentIntent = null;
     }).onError((error, stackTrace) {
-      print('Error is:--->$error $stackTrace');
+      print(error);
     });
   }
 
   //  Future<Map<String, dynamic>>
-  createPaymentIntent(String currency, double precio) async {
+  _createPaymentIntent(double precio) async {
     Map<String, dynamic> body = {
       'amount': (precio * 100).toInt().toString(), //se lo tienes que pasar en centimos porque si no no lo coge bien
-      'currency': currency,
+      'currency': 'EUR',
       'payment_method_types[]': 'card'
     };
 
@@ -319,8 +313,6 @@ class _CartPageState extends State<CartPage> {
       },
       body: body,
     );
-    // ignore: avoid_print
-    print('Payment Intent Body->>> ${response.body.toString()}');
     return jsonDecode(response.body);
   }
 }

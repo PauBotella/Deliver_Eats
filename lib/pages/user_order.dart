@@ -95,7 +95,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
     UserF user = await order.user;
     UserF currentUser = await UserProvider.getCurrentuser();
 
-    if (user.uid == currentUser.uid) {
+    if (user.id == currentUser.id) {
       return Padding(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -132,14 +132,16 @@ class _UserOrderPageState extends State<UserOrderPage> {
                       ),
                       Text(
                           '${formatNumber(await _getTotalPrice(itemList))}' +
-                          '${AppTheme.euroTxt}',
+                              '${AppTheme.euroTxt}',
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 16,
                               fontWeight: FontWeight.bold)),
                     ],
                   ),
-                  SizedBox(height: 20,)
+                  SizedBox(
+                    height: 20,
+                  )
                 ]),
               ),
             ),
@@ -159,7 +161,7 @@ _getTotalPrice(List<OrderItem> itemList) async {
 
   for (OrderItem item in itemList) {
     Product p = await item.product;
-    price += p.price * item.cantidad;
+    price += p.price * item.quantity;
   }
 
   return price;
@@ -177,11 +179,11 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
     Product p = await item.product;
     Widget txt = Row(children: [
       Text(
-        '[${item.cantidad}] ${p.name}',
+        '[${item.quantity}] ${p.name}',
         style: AppTheme.subtitleStyle,
       ),
       Text(
-        '${formatNumber(p.price * item.cantidad)}' + AppTheme.euroTxt,
+        '${formatNumber(p.price * item.quantity)}' + AppTheme.euroTxt,
         style: AppTheme.priceStyle,
       ),
     ]);

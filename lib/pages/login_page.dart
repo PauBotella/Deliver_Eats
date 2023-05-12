@@ -55,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
       Cuando apriete a cualquier sitio de la pantalla que no sea el TextFormField el focus se quitará
       */
         body: GestureDetector(
-      behavior: HitTestBehavior.opaque,
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
@@ -65,7 +64,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 SizedBox(height: 20),
-                Container(height: 150,child: Lottie.asset('assets/lockAnim.json'),),
+                Container(
+                  height: 150,
+                  child: Lottie.asset('assets/lockAnim.json'),
+                ),
                 CustomInput(
                   controller: _controllerEmail,
                   isPasswordInput: false,
@@ -92,17 +94,17 @@ class _LoginPageState extends State<LoginPage> {
                 Visibility(
                   visible: !_isRegisterPage,
                   child: ElevatedButton(
-                    onPressed: _enabled ?() async {
-                      try {
-                        _enabled = false;
-                        setState(() {
-
-                        });
-                        await AuthService().singInWithGoogle();
-                        await _createGoogleUser();
-                        Navigator.pushReplacementNamed(context, 'home');
-                      } catch (e) {}
-                    }: null,
+                    onPressed: _enabled
+                        ? () async {
+                            try {
+                              _enabled = false;
+                              setState(() {});
+                              await AuthService().singInWithGoogle();
+                              await _createGoogleUser();
+                              Navigator.pushReplacementNamed(context, 'home');
+                            } catch (e) {}
+                          }
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.inputBackground,
                       shape: RoundedRectangleBorder(
@@ -155,11 +157,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _enabled ? () {
-                    !_isRegisterPage
-                        ? _singInEmail(context)
-                        : _register(context);
-                  }: null,
+                  onPressed: _enabled
+                      ? () {
+                          !_isRegisterPage
+                              ? _singInEmail(context)
+                              : _register(context);
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
                     shape: RoundedRectangleBorder(
@@ -182,21 +186,16 @@ class _LoginPageState extends State<LoginPage> {
   void _singInEmail(BuildContext context) async {
     try {
       _enabled = false;
-      setState(() {
-
-      });
+      setState(() {});
       await signInWithEmailAndPassword();
 
       MyPreferences.email = _controllerEmail.text;
       MyPreferences.password = _controllerPassword.text;
-      MyPreferences.isUserCreated = true;
 
       Navigator.pushReplacementNamed(context, 'home');
     } catch (e) {
       _enabled = true;
-      setState(() {
-
-      });
+      setState(() {});
       diaglogResult(
           e.toString().split("]")[1], context, AppTheme.failAnimation, '');
     }
@@ -209,19 +208,16 @@ class _LoginPageState extends State<LoginPage> {
 
       MyPreferences.email = email;
       MyPreferences.password = password;
-      MyPreferences.isUserCreated = true;
       UserProvider.addUser(UserF(
           email: email,
           username: email.split('@')[0],
           role: "cliente",
-          uid: ''));
+          id: ''));
 
       Navigator.pushReplacementNamed(context, 'home');
     } catch (e) {
       _enabled = true;
-      setState(() {
-
-      });
+      setState(() {});
       diaglogResult(
           e.toString().split("]")[1], context, AppTheme.failAnimation, '');
     }
@@ -229,9 +225,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _register(BuildContext context) async {
     _enabled = false;
-    setState(() {
-
-    });
+    setState(() {});
     print('register');
     String email = _controllerEmail.text;
     String password = _controllerPassword.text;
@@ -249,20 +243,9 @@ class _LoginPageState extends State<LoginPage> {
       _singInEmail2(context, email, password);
     } on FormatException catch (ex) {
       _enabled = true;
-      setState(() {
-
-      });
+      setState(() {});
       diaglogResult(ex.message, context, AppTheme.failAnimation, '');
     }
-  }
-}
-
-extension EmailValidador on String {
-  bool isEmailValid() {
-    return RegExp(
-            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(this);
-    ;
   }
 }
 
@@ -281,7 +264,7 @@ _createGoogleUser() async {
         UserProvider.addUser(UserF(
             email: user.email!,
             username: user.email!.split('@')[0],
-            uid: '',
+            id: '',
             role: "cliente"));
       }
     });

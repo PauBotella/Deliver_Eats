@@ -17,9 +17,7 @@ void main() async {
     await MyPreferences.init();
     Stripe.publishableKey = 'pk_test_51N6wTUGrl0ywMA1a21oiMeOrRQI6zMiycTkYgfMMpiubQ0Ei9AGFs48S7VxFYoSG0vqZUV7X3ffQIQ2yBQCUP5EL00GWx0UIM6';
     runApp(MyApp());
-  }
-  );
-
+  });
 }
 
 class MyApp extends StatelessWidget {

@@ -47,11 +47,11 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Color(0xff1C2833),
-      body: splashContent(),
+      body: _splashContent(),
     );
   }
 
-  Widget splashContent() {
+  Widget _splashContent() {
     return Center(
       child: Container(
         child: Lottie.asset('assets/splash_animation.json',

@@ -29,7 +29,7 @@ class _UserPageState extends State<UserPage> {
                 UserF.fromJson(doc.data() as Map<String, dynamic>, doc.id))
             .firstWhere((user) => true,
                 orElse: () =>
-                    UserF(email: '', username: '', role: '', uid: '')));
+                    UserF(email: '', username: '', role: '', id: '')));
 
     final size = MediaQuery.of(context).size;
     return Scaffold(

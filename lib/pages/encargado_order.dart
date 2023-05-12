@@ -163,7 +163,7 @@ _getTotalPrice(List<OrderItem> itemList) async {
 
   for (OrderItem item in itemList) {
     Product p = await item.product;
-    price += p.price * item.cantidad;
+    price += p.price * item.quantity;
   }
 
   return price;
@@ -183,11 +183,11 @@ Future<List<Widget>> _getProducts(
 
     Widget txt = Row(children: [
       Text(
-        '[${item.cantidad}] ${p.name}',
+        '[${item.quantity}] ${p.name}',
         style: AppTheme.subtitleStyle,
       ),
       Text(
-        '${formatNumber(p.price * item.cantidad)}' + AppTheme.euroTxt,
+        '${formatNumber(p.price * item.quantity)}' + AppTheme.euroTxt,
         style: AppTheme.priceStyle,
       ),
     ]);

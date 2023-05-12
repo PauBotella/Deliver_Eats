@@ -29,7 +29,7 @@ class Orders {
     return {
       'date': date,
       'totalPrice':totalPrice,
-      'user_ID': UserProvider.usersRef.doc(await user.uid),
+      'user_ID': UserProvider.usersRef.doc(await user.id),
     };
   }
 }

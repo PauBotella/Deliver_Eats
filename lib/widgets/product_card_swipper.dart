@@ -16,13 +16,20 @@ class ProductSwipper extends StatelessWidget {
       return FutureBuilder(
         future: list,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if(snapshot.hasData) {
-
-            if(snapshot.data.length == 0) {
-              return Center(child: Column(
+          if (snapshot.hasData) {
+            if (snapshot.data.length == 0) {
+              return Center(
+                  child: Column(
                 children: [
-                  SizedBox(height: 300,),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 20),child: Text('Este restaurante no tiene productos todavia',style: AppTheme.titleStyle,)),
+                  SizedBox(
+                    height: 300,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Este restaurante no tiene productos todavia',
+                        style: AppTheme.titleStyle,
+                      )),
                   CircularProgressIndicator()
                 ],
               ));
@@ -36,7 +43,6 @@ class ProductSwipper extends StatelessWidget {
     } catch (e) {
       return Container();
     }
-
   }
 }
 
@@ -52,8 +58,8 @@ cardContent(BuildContext context, List<Product> list) {
         itemHeight: size.height * 0.4,
         itemBuilder: (_, int index) {
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'details',
-                arguments: list[index]),
+            onTap: () =>
+                Navigator.pushNamed(context, 'details', arguments: list[index]),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(

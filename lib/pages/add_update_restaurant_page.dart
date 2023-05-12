@@ -287,7 +287,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
         email: email,
         username: email.split("@")[0],
         role: 'encargado',
-        uid: '',
+        id: '',
         restaurant: Future.value(Restaurant.fromJson(
             comprobar.docs[0].data() as Map<String, dynamic>, id)));
 

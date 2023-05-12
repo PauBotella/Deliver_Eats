@@ -6,18 +6,18 @@ import 'package:deliver_eats/providers/product_provider.dart';
 import 'orders.dart';
 
 class OrderItem {
-  int cantidad;
+  int quantity;
   Future<Orders> order;
   Future<Product> product;
 
   OrderItem({
-    required this.cantidad,
+    required this.quantity,
     required this.order,
     required this.product,
   });
 
   static OrderItem fromJson(Map<String,dynamic> json,String id) {
-    return OrderItem(cantidad: json['cantidad'], order: _getOrder(json['order_ID']), product: _getProduct(json['product_ID']));
+    return OrderItem(quantity: json['quantity'], order: _getOrder(json['order_ID']), product: _getProduct(json['product_ID']));
   }
 
   static Future<Orders> _getOrder(DocumentReference<Map<String, dynamic>> ref) async {
@@ -38,7 +38,7 @@ class OrderItem {
     Orders order = await this.order;
     Product product = await this.product;
     return {
-      'cantidad' : cantidad,
+      'quantity' : quantity,
       'order_ID' : await OrderProvider.ordersRef.doc(order.id),
       'product_ID' : ProductProvider.productsRef.doc(product.id),
 

@@ -6,13 +6,13 @@ import 'package:deliver_eats/providers/user_provider.dart';
 
 class Cart {
 
-  int cantidad;
+  int quantity;
   String id;
   Future<UserF> user;
   Future<Product> product;
 
   Cart({
-    required this.cantidad,
+    required this.quantity,
     required this.user,
     required this.id,
     required this.product,
@@ -20,7 +20,7 @@ class Cart {
 
   static Cart fromJson(Map<String,dynamic> json,String id) {
     return Cart(
-        cantidad: json['cantidad'],
+        quantity: json['quantity'],
         user: _getUser(json['user_ID']),
         product: _getProduct(json['product_ID'],),
         id: id
@@ -48,9 +48,9 @@ class Cart {
     Product p =await product;
     UserF u = await user;
     return {
-      'cantidad': cantidad,
+      'quantity': quantity,
       'product_ID': ProductProvider.productsRef.doc(p.id),
-      'user_ID': UserProvider.usersRef.doc(u.uid)
+      'user_ID': UserProvider.usersRef.doc(u.id)
     };
   }
 }

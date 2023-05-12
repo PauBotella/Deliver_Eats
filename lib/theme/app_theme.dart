@@ -9,20 +9,27 @@ class AppTheme {
 
   static const String euroTxt = '€';
 
-  static const TextStyle titleStyle = TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: titleColor);
-  static const TextStyle subtitleStyle = TextStyle(fontSize: 16,color: Colors.white);
-  static const TextStyle ratingStyle = TextStyle(fontSize: 15,color: Colors.yellow);
-  static const TextStyle priceStyle = TextStyle(color: Colors.red,fontWeight:FontWeight.bold);
+  static const TextStyle titleStyle =
+      TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: titleColor);
+  static const TextStyle subtitleStyle =
+      TextStyle(fontSize: 16, color: Colors.white);
+  static const TextStyle ratingStyle =
+      TextStyle(fontSize: 15, color: Colors.yellow);
+  static const TextStyle priceStyle =
+      TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
 
   static const String payAnimation = 'assets/payment-complete.json';
   static const String checkAnimation = 'assets/check_animation.json';
   static const String failAnimation = 'assets/failed-status.json';
   static const String noDisponibleAnimation = 'assets/proximamente.json';
 
-
   static ThemeData theme = ThemeData.light().copyWith(
     primaryColor: primary,
-    appBarTheme: AppBarTheme(color: widgetColor, elevation: 0,centerTitle: true,),
+    appBarTheme: AppBarTheme(
+      color: widgetColor,
+      elevation: 0,
+      centerTitle: true,
+    ),
     scaffoldBackgroundColor: primary,
 
     //Input theme

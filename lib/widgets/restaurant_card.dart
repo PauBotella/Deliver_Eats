@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
+import 'package:deliver_eats/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +18,7 @@ class RestaurantCard extends StatelessWidget {
     List<Restaurant> restaurants =
         snapshot.data!.docs.map<Restaurant>((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-      Restaurant restaurant = Restaurant.fromJson(data,document.id);
+      Restaurant restaurant = Restaurant.fromJson(data, document.id);
       return restaurant;
     }).toList();
 
@@ -35,6 +36,7 @@ class RestaurantCard extends StatelessWidget {
 
 class _RestaurantCards extends StatelessWidget {
   final Restaurant restaurant;
+
   const _RestaurantCards({Key? key, required this.restaurant})
       : super(key: key);
 
@@ -65,7 +67,8 @@ class _RestaurantCardBody extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return GestureDetector(
-      onTap: () =>{Navigator.pushNamed(context, 'products',arguments: restaurant)},
+      onTap: () =>
+          {Navigator.pushNamed(context, 'products', arguments: restaurant)},
       child: Container(
         child: Column(children: [
           Padding(
@@ -84,18 +87,22 @@ class _RestaurantCardBody extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(restaurant.name,style: AppTheme.titleStyle,),
+              Text(
+                restaurant.name,
+                style: AppTheme.titleStyle,
+              ),
             ],
           ),
-          
-          Text("Cocina "+ restaurant.type,style: AppTheme.subtitleStyle,),
+          Text(
+            "Cocina " + restaurant.type,
+            style: AppTheme.subtitleStyle,
+          ),
           const SizedBox(
             height: 6,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               const Icon(
                 Icons.star,
                 size: 20,
@@ -105,7 +112,7 @@ class _RestaurantCardBody extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                  '${NumberFormat("#,#0.0", "es_ES").format(restaurant.rating)}' ,
+                '${formatNumber(restaurant.rating)}',
                 style: AppTheme.ratingStyle,
               )
             ],
@@ -113,7 +120,11 @@ class _RestaurantCardBody extends StatelessWidget {
           const SizedBox(
             height: 6,
           ),
-          Text(restaurant.address, style: TextStyle(color: Colors.pinkAccent,fontWeight: FontWeight.bold),),
+          Text(
+            restaurant.address,
+            style: TextStyle(
+                color: Colors.pinkAccent, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(
             height: 10,
           )

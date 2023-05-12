@@ -15,7 +15,7 @@ class OrderProvider {
   static Future<List<Orders>> getOrdersList() async {
     List<Orders> list = [];
     UserF user = await UserProvider.getCurrentuser();
-    DocumentReference doc = UserProvider.usersRef.doc(user.uid);
+    DocumentReference doc = UserProvider.usersRef.doc(user.id);
     QuerySnapshot snapshot = await ordersRef.where('user_ID',isEqualTo: doc).get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
 
