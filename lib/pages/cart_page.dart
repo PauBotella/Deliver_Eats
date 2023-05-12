@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deliver_eats/models/cart.dart';
@@ -10,8 +12,9 @@ import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/utils/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 import '../models/orders.dart';
 import '../models/product.dart';
 import '../models/user.dart';
@@ -29,8 +32,8 @@ class _CartPageState extends State<CartPage> {
   bool _enabled = true;
   late Future<List<Cart>> carts;
   List<Cart> cartList = [];
-  bool primeraVez = true;
-  int cosa = 0;
+  double totalPrice = 0.0;
+  Map<String, dynamic>? paymentIntent;
 
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _CartPageState extends State<CartPage> {
     cartList = list;
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,12 +167,17 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  _dialogPedido() async {
+  _totalPrice() async {
     double precio = 0.0;
     for (Cart cart in cartList) {
       Product product = await cart.product;
       precio += product.price * cart.cantidad;
     }
+    return precio;
+  }
+
+  _dialogPedido() async {
+    double precio = await _totalPrice();
 
     showDialog(
         context: context,
@@ -195,7 +204,10 @@ class _CartPageState extends State<CartPage> {
             actions: [
               TextButton(
                   onPressed: () {
-                    _enabled ? _hacerPedido(precio) : null;
+                    try {
+                      _enabled ? makePayment() : null;
+                    } catch (e) {}
+
                   },
                   child: const Text('Hacer pedido',
                       style: TextStyle(color: Colors.blue))),
@@ -213,52 +225,102 @@ class _CartPageState extends State<CartPage> {
   }
 
   _hacerPedido(double precio) async {
+    _enabled = false;
+    setState(() {});
+    UserF user = await UserProvider.getCurrentuser();
+    DateTime hoy = DateTime.now();
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    String date = dateFormat.format(hoy);
+
+    Orders order = Orders(
+        date: date, user: Future.value(user), id: '', totalPrice: precio);
+
+    DocumentReference<Map<String, dynamic>> orderRef =
+        await OrderProvider.addOrder(order);
+
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await orderRef.get();
+    final Map<String, dynamic> orderData = snapshot.data()!;
+    Orders firebaseOrder = Orders.fromJson(orderData, orderRef.id);
+
+    for (Cart c in cartList) {
+      OrderItem item = OrderItem(
+          cantidad: c.cantidad,
+          order: Future.value(firebaseOrder),
+          product: c.product);
+
+      await OrderItemProvider.addOrderItem(item);
+    }
+
+    for (var value in cartList) {
+      CartProvider.deleteCart(value.id);
+    }
+    ;
+
+    cartList.clear();
+    setState(() {});
+
+    _enabled = true;
+    setState(() {});
+  }
+
+  Future<void> makePayment() async {
+    totalPrice = await _totalPrice();
+
     try {
+
       if (cartList.isEmpty) {
         throw Exception('Añade algún producto al carrito');
       }
-      _enabled = false;
-      setState(() {});
-      UserF user = await UserProvider.getCurrentuser();
-      DateTime hoy = DateTime.now();
-      DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-      String date = dateFormat.format(hoy);
 
-      Orders order = Orders(
-          date: date, user: Future.value(user), id: '', totalPrice: precio);
+      paymentIntent = await createPaymentIntent('EUR', totalPrice);
+      //Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+                  paymentIntentClientSecret: paymentIntent!['client_secret'],
+                  style: ThemeMode.dark,
+                  merchantDisplayName: 'Pau'))
+          .then((value) {});
 
-      DocumentReference<Map<String, dynamic>> orderRef =
-          await OrderProvider.addOrder(order);
-
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await orderRef.get();
-      final Map<String, dynamic> orderData = snapshot.data()!;
-      Orders firebaseOrder = Orders.fromJson(orderData, orderRef.id);
-
-      for (Cart c in cartList) {
-        OrderItem item = OrderItem(
-            cantidad: c.cantidad,
-            order: Future.value(firebaseOrder),
-            product: c.product);
-
-        await OrderItemProvider.addOrderItem(item);
-      }
-
-      for (var value in cartList) {
-        CartProvider.deleteCart(value.id);
-      }
-      ;
-
-      cartList.clear();
-      setState(() {});
-      diaglogResult(
-          'Pedido Completado', context, AppTheme.payAnimation, 'home');
-      _enabled = true;
-      setState(() {});
+      displayPaymentSheet();
     } catch (e) {
       _enabled = true;
       setState(() {});
       diaglogResult(
           e.toString().split(":")[1], context, AppTheme.failAnimation, '');
     }
+  }
+
+  displayPaymentSheet() async {
+
+    await Stripe.instance.presentPaymentSheet().then((value) async {
+      await _hacerPedido(totalPrice);
+      Navigator.pushReplacementNamed(context, 'home');
+      paymentIntent = null;
+    }).onError((error, stackTrace) {
+      print('Error is:--->$error $stackTrace');
+    });
+  }
+
+  //  Future<Map<String, dynamic>>
+  createPaymentIntent(String currency, double precio) async {
+    Map<String, dynamic> body = {
+      'amount': (precio * 100).toInt().toString(), //se lo tienes que pasar en centimos porque si no no lo coge bien
+      'currency': currency,
+      'payment_method_types[]': 'card'
+    };
+
+    var response = await http.post(
+      Uri.parse('https://api.stripe.com/v1/payment_intents'),
+      headers: {
+        'Authorization':
+            'Bearer sk_test_51N6wTUGrl0ywMA1aXqKill9iE9LOmbPb7umZs0j2vL4vMp36ChmuAwVTj4DHiLlSrsMB9UX1oXx1mgygXbe0Gwxo00EvTWiVAQ',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: body,
+    );
+    // ignore: avoid_print
+    print('Payment Intent Body->>> ${response.body.toString()}');
+    return jsonDecode(response.body);
   }
 }

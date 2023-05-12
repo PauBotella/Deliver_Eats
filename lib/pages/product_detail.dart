@@ -119,7 +119,7 @@ _addProductToCart(Future<Product> product,BuildContext context) async {
 
   Cart cart = Cart(cantidad: 1, user: user, id: '', product: product);
 
-  CartProvider.addCart(cart);
+  await CartProvider.addCart(cart);
 
   diaglogResult('Producto añadido al carrito con éxito', context,AppTheme.checkAnimation,'');
 }
