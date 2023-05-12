@@ -6,7 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 formatNumber(double number) {
-  return NumberFormat("#,#0.0", "es_ES").format(number);
+  if(number < 100) {
+    return NumberFormat("#,#0.0", "es_ES").format(number);
+  } else {
+    return NumberFormat("##0.0", "es_ES").format(number);
+  }
+
 }
 
 getImageByURL(String url) async {

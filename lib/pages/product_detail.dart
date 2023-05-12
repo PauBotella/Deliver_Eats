@@ -5,6 +5,7 @@ import 'package:deliver_eats/providers/user_provider.dart';
 import 'package:deliver_eats/theme/app_theme.dart';
 import 'package:deliver_eats/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../models/product.dart';
 import '../utils/dialog.dart';
@@ -18,10 +19,10 @@ class ProductDetail extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
-
         preferredSize: Size.fromHeight(250),
         child: AppBar(
           centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.tealAccent),
           flexibleSpace: Stack(
             children: [Positioned.fill(
               child: Container(
@@ -53,34 +54,53 @@ class ProductDetail extends StatelessWidget {
         body: Column(
             children: [
 
-              const SizedBox(height: 50,),
-                Padding(
-                  padding: EdgeInsets.only(left: 160),
-                  child: Row(
-                    children: [
-                      Icon(Icons.star,color: Colors.yellow,),
-                      Text('${formatNumber(product.rating)}',style: AppTheme.ratingStyle,)
-                    ],
+              const SizedBox(height: 30,),
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      children: [
+                        Text(formatNumber(product.rating),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.deepOrange),),
+                        RatingBarIndicator(
+                        rating: product.rating,
+                        unratedColor: Colors.white70,
+                        itemCount: 5,
+                        itemSize: 50,
+                        itemPadding: EdgeInsets.all(5),
+                        itemBuilder: (context,index) => Icon(Icons.star,color: Colors.amber,),
+                      ),
+
+      ]
+                    ),
                   ),
-                ),
-              const SizedBox(height: 50,),
-              Row(
-                  children: [
-                    SizedBox(width: size.width-320,),
-                  Text('Por tan solo un total de ',style: AppTheme.subtitleStyle,),
-                    Text('${formatNumber(product.price)}' + " " + AppTheme.euroTxt,style: AppTheme.priceStyle,),
-          ]),
-              const SizedBox(height: 50,),
+
               Padding(
                 padding: EdgeInsets.all(20),
-                child: Text(
-                  product.description,
-                  textAlign: TextAlign.justify,
-                  style: AppTheme.subtitleStyle,
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                      color: AppTheme.widgetColor
+                  ),
+                  child: Center(
+                    child: Text(
+                      product.description,
+                      textAlign: TextAlign.center,
+                      style: AppTheme.subtitleStyle,
+                    ),
+                  ),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                child: Row(
+                    children: [
+                      Text('Por tan solo un total de ',style: TextStyle(fontSize: 22,color: Colors.white),),
+                      Text('${formatNumber(product.price)}'+ AppTheme.euroTxt,style: TextStyle(fontSize: 22,color: Colors.red,fontWeight: FontWeight.bold),),
+                    ]),
+              ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.all(20),
