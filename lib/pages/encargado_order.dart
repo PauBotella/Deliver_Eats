@@ -106,7 +106,7 @@ class _RestaurantOrderPageState extends State<RestaurantOrderPage> {
           Container(
             color: AppTheme.widgetColor,
             width: double.infinity,
-            height: size.height - 490,
+            height: size.height - 510,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(children: [
@@ -146,9 +146,6 @@ class _RestaurantOrderPageState extends State<RestaurantOrderPage> {
                             fontWeight: FontWeight.bold)),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                )
               ]),
             ),
           ),
