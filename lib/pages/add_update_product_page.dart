@@ -169,7 +169,7 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
                           try {
                             if (update && _selectedImage == null) {
                               _selectedImage =
-                                  await getImageByURL(restaurant.image);
+                                  await getImageByURL(product!.image);
                               setState(() {});
                             }
 
