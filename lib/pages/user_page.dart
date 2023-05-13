@@ -45,7 +45,6 @@ class _UserPageState extends State<UserPage> {
               };
               Map<String, Function()> encargadoOptions = {
                 'Productos': () => _goProducts(context),
-                'Ver registros': () => _goEncargadoOrder(context)
               };
               encargadoOptions.addAll(clientOptions);
               Map<String, Function()> adminOptions =
@@ -135,11 +134,6 @@ _goOrders(BuildContext context) {
 
 _goOrderUser(BuildContext context) {
   Navigator.pushNamed(context, 'user-order');
-}
-
-_goEncargadoOrder(BuildContext context) {
-  print('ir encargado');
-  Navigator.pushNamed(context, 'encargado-order');
 }
 
 _logOut(BuildContext context) async {

@@ -56,9 +56,9 @@ class _OrderPageState extends State<OrderPage> {
                               .map<OrderItem>((DocumentSnapshot document) {
                             Map<String, dynamic> data =
                                 document.data() as Map<String, dynamic>;
-                            OrderItem restaurant =
+                            OrderItem orderItem =
                                 OrderItem.fromJson(data, document.id);
-                            return restaurant;
+                            return orderItem;
                           }).toList();
 
                           return Column(
@@ -142,7 +142,7 @@ class _OrderPageState extends State<OrderPage> {
                       style: AppTheme.subtitleStyle,
                     ),
                     Text(
-                        '${formatNumber(await _getTotalPrice(itemList))}' +
+                        '${formatNumber(order.totalPrice)}' +
                             '${AppTheme.euroTxt}',
                         style: TextStyle(
                             color: Colors.red,
@@ -161,18 +161,6 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 }
-
-_getTotalPrice(List<OrderItem> itemList) async {
-  double price = 0.0;
-
-  for (OrderItem item in itemList) {
-    Product p = await item.product;
-    price += p.price * item.quantity;
-  }
-
-  return price;
-}
-
 Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
   List<Widget> list = [
     Divider(
@@ -187,10 +175,6 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
       Text(
         '[${item.quantity}] ${p.name} ',
         style: AppTheme.subtitleStyle,
-      ),
-      Text(
-        '${formatNumber(p.price * item.quantity)}' + AppTheme.euroTxt,
-        style: AppTheme.priceStyle,
       ),
     ]);
     list.add(txt);

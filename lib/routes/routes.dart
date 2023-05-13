@@ -9,7 +9,6 @@ import 'package:deliver_eats/pages/user_page.dart';
 import 'package:flutter/material.dart';
 
 import '../pages/add_update_restaurant_page.dart';
-import '../pages/encargado_order.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 import '../pages/restaurant_crud_page.dart';
@@ -29,7 +28,6 @@ Map<String,WidgetBuilder> getRoutes() {
       'Pcrud': (BuildContext context) => CrudProductPage(),
       'orders': (BuildContext context) => OrderPage(),
       'user-order': (BuildContext context) => UserOrderPage(),
-      'encargado-order': (BuildContext context) => RestaurantOrderPage(),
     };
 }
 

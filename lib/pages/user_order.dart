@@ -23,7 +23,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Registros de pedidos'),
+          title: const Text('Mis pedidos'),
           centerTitle: true,
         ),
         body: FutureBuilder(
@@ -131,7 +131,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
                         style: AppTheme.subtitleStyle,
                       ),
                       Text(
-                          '${formatNumber(await _getTotalPrice(itemList))}' +
+                          '${formatNumber(order.totalPrice)}' +
                               '${AppTheme.euroTxt}',
                           style: TextStyle(
                               color: Colors.red,
@@ -156,17 +156,6 @@ class _UserOrderPageState extends State<UserOrderPage> {
   }
 }
 
-_getTotalPrice(List<OrderItem> itemList) async {
-  double price = 0.0;
-
-  for (OrderItem item in itemList) {
-    Product p = await item.product;
-    price += p.price * item.quantity;
-  }
-
-  return price;
-}
-
 Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
   List<Widget> list = [
     Divider(
@@ -181,10 +170,6 @@ Future<List<Widget>> _getProducts(List<OrderItem> itemList) async {
       Text(
         '[${item.quantity}] ${p.name}',
         style: AppTheme.subtitleStyle,
-      ),
-      Text(
-        '${formatNumber(p.price * item.quantity)}' + AppTheme.euroTxt,
-        style: AppTheme.priceStyle,
       ),
     ]);
     list.add(txt);
