@@ -240,10 +240,11 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
         }
       }
       double price = 0.0;
-      try {
-        price = double.parse(priceTxt);
-      } catch (e) {
-        throw Exception("Introduce un precio válido");
+      price = double.parse(priceTxt);
+
+      if (price > 1000) {
+        throw Exception(
+            "No puedes poner un precio mayor que 1000 a un producto");
       }
 
       Product newProduct = Product(
@@ -293,7 +294,8 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
         await ProductProvider.productsRef.where('name', isEqualTo: name).get();
 
     List<Product> list = await restaurant.products;
-    list.add(Product.fromJson(queryResult.docs[0].data() as Map<String, dynamic>,
+    list.add(Product.fromJson(
+        queryResult.docs[0].data() as Map<String, dynamic>,
         queryResult.docs[0].id));
     restaurant.products = Future.value(list);
     await RestaurantProvider.updateRestaurant(restaurant);
