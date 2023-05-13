@@ -97,23 +97,23 @@ class ProductDetail extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 50),
+            padding: EdgeInsets.symmetric(horizontal: 55),
             child: Row(children: [
               Text(
                 'Por tan solo un total de ',
-                style: TextStyle(fontSize: 22, color: Colors.white),
+                style: TextStyle(fontSize: 21, color: Colors.white),
               ),
               Text(
                 '${formatNumber(product.price)}' + AppTheme.euroTxt,
                 style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 21,
                     color: Colors.red,
                     fontWeight: FontWeight.bold),
               ),
             ]),
           ),
           const SizedBox(
-            height: 20,
+            height: 22,
           ),
           Padding(
             padding: const EdgeInsets.all(20),

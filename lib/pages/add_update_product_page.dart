@@ -242,9 +242,9 @@ class _AddUpdateProductState extends State<AddUpdateProduct> {
       double price = 0.0;
       price = double.parse(priceTxt);
 
-      if (price > 1000) {
+      if (price > 99) {
         throw Exception(
-            "No puedes poner un precio mayor que 1000 a un producto");
+            "No puedes poner un precio mayor que 100 a un producto");
       }
 
       Product newProduct = Product(
