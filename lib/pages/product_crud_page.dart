@@ -101,7 +101,7 @@ class _CrudProductPageState extends State<CrudProductPage> {
                   style: AppTheme.titleStyle,
                 ),
                 subtitle: Text(
-                  products[index].price.toString() + AppTheme.euroTxt,
+                  products[index].price.toString() + AppTheme.EUROTXT,
                   style: AppTheme.priceStyle,
                 ),
                 trailing: Icon(

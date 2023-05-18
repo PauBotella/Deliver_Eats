@@ -119,7 +119,7 @@ class _CartPageState extends State<CartPage> {
                 style: AppTheme.subtitleStyle,
               ),
               subtitle: Text(
-                '${formatNumber(product.price * quantity)} ${AppTheme.euroTxt}',
+                '${formatNumber(product.price * quantity)} ${AppTheme.EUROTXT}',
                 style: AppTheme.priceStyle,
               ),
               trailing: Wrap(
@@ -196,7 +196,7 @@ class _CartPageState extends State<CartPage> {
                     style: AppTheme.subtitleStyle,
                   ),
                   Text(
-                    ' ${formatNumber(price)} ${AppTheme.euroTxt}',
+                    ' ${formatNumber(price)} ${AppTheme.EUROTXT}',
                     style: AppTheme.priceStyle,
                   )
                 ])),

@@ -104,7 +104,7 @@ class ProductDetail extends StatelessWidget {
                 style: TextStyle(fontSize: 21, color: Colors.white),
               ),
               Text(
-                '${formatNumber(product.price)}' + AppTheme.euroTxt,
+                '${formatNumber(product.price)}' + AppTheme.EUROTXT,
                 style: TextStyle(
                     fontSize: 21,
                     color: Colors.red,

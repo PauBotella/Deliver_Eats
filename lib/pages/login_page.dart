@@ -25,8 +25,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  final TextEditingController _controllerConfirmPassword =
-      TextEditingController();
+  final TextEditingController _controllerConfirmPassword = TextEditingController();
 
   Future signInWithEmailAndPassword() async {
     await FbAuth().signInWithEmailAndPassword(
@@ -102,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                               await AuthService().singInWithGoogle();
                               await _createGoogleUser();
                               Navigator.pushReplacementNamed(context, 'home');
-                            } catch (e) {}
+                            } catch (e) {
+                              _enabled = true;
+                              setState(() {});
+                            }
                           }
                         : null,
                     style: ElevatedButton.styleFrom(

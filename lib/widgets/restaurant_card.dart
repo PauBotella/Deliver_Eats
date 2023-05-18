@@ -67,8 +67,7 @@ class _RestaurantCardBody extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return GestureDetector(
-      onTap: () =>
-          {Navigator.pushNamed(context, 'products', arguments: restaurant)},
+      onTap: () => {Navigator.pushNamed(context, 'products', arguments: restaurant)},
       child: Container(
         child: Column(children: [
           Padding(

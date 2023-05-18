@@ -7,7 +7,7 @@ class AppTheme {
   static const Color buttonColor = Color(0xfff0d6efd);
   static const Color titleColor = Color(0xff93c47d);
 
-  static const String euroTxt = '€';
+  static const String EUROTXT = '€';
 
   static const TextStyle titleStyle =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: titleColor);
@@ -31,7 +31,6 @@ class AppTheme {
       centerTitle: true,
     ),
     scaffoldBackgroundColor: primary,
-
     //Input theme
     inputDecorationTheme: InputDecorationTheme(
       floatingLabelBehavior: FloatingLabelBehavior.never,
