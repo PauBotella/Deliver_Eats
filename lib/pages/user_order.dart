@@ -43,7 +43,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
                           OrderItemProvider.getOrder_item(ordersList[index].id),
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> itemSnapshot) {
-                        if (itemSnapshot.hasData || ordersList.length == 0) {
+                        if (itemSnapshot.hasData) {
                           List<OrderItem> itemList = itemSnapshot.data!.docs
                               .map<OrderItem>((DocumentSnapshot document) {
                             Map<String, dynamic> data =
@@ -131,7 +131,7 @@ class _UserOrderPageState extends State<UserOrderPage> {
                         style: AppTheme.subtitleStyle,
                       ),
                       Text(
-                          '${formatNumber(order.totalPrice)}' +
+                          '${formatNumberPrice(order.totalPrice)}' +
                               '${AppTheme.EUROTXT}',
                           style: TextStyle(
                               color: Colors.red,

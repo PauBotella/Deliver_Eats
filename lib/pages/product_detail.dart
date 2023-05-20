@@ -101,12 +101,12 @@ class ProductDetail extends StatelessWidget {
             child: Row(children: [
               Text(
                 'Por tan solo un total de ',
-                style: TextStyle(fontSize: 21, color: Colors.white),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
               Text(
-                '${formatNumber(product.price)}' + AppTheme.EUROTXT,
+                '${formatNumberPrice(product.price)}' + AppTheme.EUROTXT,
                 style: TextStyle(
-                    fontSize: 21,
+                    fontSize: 20,
                     color: Colors.red,
                     fontWeight: FontWeight.bold),
               ),

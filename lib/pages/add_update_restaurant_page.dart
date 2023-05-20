@@ -53,7 +53,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 Text(
                   'Introduce la imagen del restaurante',
@@ -141,7 +141,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                     icon: Icons.abc,
                     controller: typeController),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 ElevatedButton(
                   onPressed: _enabled
@@ -180,7 +180,7 @@ class _AddUpdateRestaurantState extends State<AddUpdateRestaurant> {
                   ),
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
               ],
             ),

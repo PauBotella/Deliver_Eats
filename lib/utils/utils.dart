@@ -14,6 +14,15 @@ formatNumber(double number) {
 
 }
 
+formatNumberPrice(double number) {
+  if(number < 100) {
+    return NumberFormat("#,#0.00", "es_ES").format(number);
+  } else {
+    return NumberFormat("##0.00", "es_ES").format(number);
+  }
+
+}
+
 getImageByURL(String url) async {
   File restaurantImg = await DefaultCacheManager().getSingleFile(url);
   XFile imgFile = await XFile(restaurantImg.path);

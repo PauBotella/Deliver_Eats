@@ -142,7 +142,7 @@ class _OrderPageState extends State<OrderPage> {
                       style: AppTheme.subtitleStyle,
                     ),
                     Text(
-                        '${formatNumber(order.totalPrice)}' +
+                        '${formatNumberPrice(order.totalPrice)}' +
                             '${AppTheme.EUROTXT}',
                         style: TextStyle(
                             color: Colors.red,
