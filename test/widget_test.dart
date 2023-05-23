@@ -20,25 +20,28 @@ void main() {
       final Map<String, dynamic> userMap = await user.toMap();
       expect(user.email, userMap["email"]);
     });
-
     test("Comprobar que el mapa se transforma correctamente al usuario", () async {
       final Map<String, dynamic> userMap = await user.toMap();
       final UserF jsonUser = UserF.fromJson(userMap, "ABCDEF");
       expect(user.email, userMap["email"]);
     });
-
   });
-
   group("Format Numbers", () {
     test("Comprobar que los números menores de 100 se mostrarán correctamente", () {
       double num = 12.5345935938483472347827432;
       expect(formatNumber(num).toString(), "12,5");
     });
-
     test("Comprobar que los números mayores de 100 se mostrarán correctamente", () {
       double num = 420.6945935938483472347827432;
       expect(formatNumber(num).toString(), "420,7");
     });
-
+    test("Comprobar que los precios menores de 100 se mostrarán correctamente", () {
+      double num = 12.5345935938483472347827432;
+      expect(formatNumberPrice(num).toString(), "12,53");
+    });
+    test("Comprobar que los precios mayores de 100 se mostrarán correctamente", () {
+      double num = 420.6945935938483472347827432;
+      expect(formatNumberPrice(num).toString(), "420,69");
+    });
   });
 }
